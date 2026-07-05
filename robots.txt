@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://coffee-maker.github.io/Cinebara-Docs/sitemap.xml
+Sitemap: https://docs.cinebara.com/sitemap.xml

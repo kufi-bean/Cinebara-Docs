@@ -1,10 +1,10 @@
-﻿# Cinebara
+﻿# Cinebara Docs
 
-> Weow!
+> Docs & plans for Cinebara available at https://docs.cinebara.com
 
-- [Cinebara](https://coffee-maker.github.io/Cinebara-Docs/welcome.md): Cinebara
-- [Core Observations](https://coffee-maker.github.io/Cinebara-Docs/ui/ui.md): In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.
+- [Cinebara Docs](https://docs.cinebara.com/readme.md): Cinebara Docs
+- [Core Observations](https://docs.cinebara.com/ui/ui.md): In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.
 
 ## Core Observations
 
-- [Quickstart](https://coffee-maker.github.io/Cinebara-Docs/ui/quickstart.md)
+- [Quickstart](https://docs.cinebara.com/ui/quickstart.md)
