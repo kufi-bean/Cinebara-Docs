@@ -1,0 +1,11 @@
+input: .
+output: .retype
+url: coffee-maker.github.io/Cinebara-Docs
+branding:
+  title: Cinebara
+  label: Docs
+# links:
+  # - text: Home
+  #   link: https://coffee-maker.github.io/Cinebara-Docs/
+# footer:
+#   copyright: "&copy; Copyright . All rights reserved."
