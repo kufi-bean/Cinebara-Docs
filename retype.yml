@@ -1,13 +1,11 @@
 input: .
 output: .retype
-url: coffee-maker.github.io/Cinebara-Docs
+url: docs.cinebara.com
 branding:
   title: Cinebara
   label: Docs
-exclude:
-  - "README.md"
 # links:
   # - text: Home
-  #   link: https://coffee-maker.github.io/Cinebara-Docs/
+  #   link: https://docs.cinebara.com
 # footer:
 #   copyright: "&copy; Copyright . All rights reserved."
