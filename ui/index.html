@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836608859533">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836622423291">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -43,11 +43,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.836608859533" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.836622423291" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836608859533" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836622423291" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836608859533" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836622423291" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -278,7 +278,7 @@ If this means that there is no items to assign this preferred size to, do not as
 <p>A box is a core unit of the UI.
 For purposes of layout, it is a rectangle, whose size and position are to be determined.</p>
 <figure class="content-center">
-    <img src="images/box_anatomy.png" alt="A box with its inner and outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="168" height="204" />
+    <img src="images/box_anatomy.png" alt="A box with its inner and outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="332" height="404" />
     <figcaption class="caption">A box with its inner and outer buffers</figcaption>
 </figure>
 <h1 id="buffer">Buffer</h1>
@@ -291,7 +291,7 @@ Buffer never collapses through gap decorations.
 A box&#x27;s inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
 A box&#x27;s own inner buffers do not collapse with each other. This is because a box&#x27;s inner buffer on a side is often what provides space for the box&#x27;s border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.</p>
 <figure class="content-center">
-    <img src="images/buffer_collapse_inner_outer.png" alt="An item's outer buffer collapsing with a container's inner buffer" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="240" height="240" />
+    <img src="images/buffer_collapse_inner_outer.png" alt="An item's outer buffer collapsing with a container's inner buffer" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="369" height="369" />
     <figcaption class="caption">An item's outer buffer collapsing with a container's inner buffer</figcaption>
 </figure>
 <h1 id="gaps">Gaps</h1>
