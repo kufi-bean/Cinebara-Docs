@@ -102,9 +102,51 @@ This means that the container will resolve indefinite sizes to be at least its m
 Alignment may want to align items to be fully or partially outside of the container and this still allows for that.
 It also leaves enough space for those items to slide fully into view.
 
+To determine an absolute container's min size from its children, calculate each child box's min size plus collapsed end buffers and take the largest of those.
+
+To determine an absolute container's preferred size from its children, calculate each child box's preferred size plus collapsed end buffers and take the largest of those.
+
 # Flex Layout
 Flex layout exists to lay out items into lines of content that may or may not be allowed to wrap.
 Examples of this include toolbars, lines of text, or stacks of messages in a chat history.
+
+Flex layout is performed as follows:
+
+1. Assign child boxes to flex rows.
+In a non-wrapping flex container, all children are placed in the same row.
+In a wrapping flex container, children are placed in rows at their preferred size (or min size if no preferred size is given) and placement wraps once placing a child would exceed the available size in the placement direction.
+Since gaps are only placed between items, so no gap is placed at the end of a row.
+
+2. Create a rack for each row and use it to distribute the items in that row.
+This also determines the placement axis sizes of all child boxes.
+
+3. Lay out all child boxes to determine their wrapping axis sizes.
+From now on, this size is used in place of the preferred size along the wrapping axis.
+
+3. If this is a wrapping flex container:
+(TODO: Wrapping and non-wrapping flex containers may want to be identical by leaving the outer edges of the first and last line open.)
+
+	1. Create a rack that contains one line for each row. This rack also contains the wrapping axis gaps and inner buffers of the flex container.
+
+	4. Distribute and align that wrapping axis rack to position the rows.
+
+5. Create a wrapping axis rack for each child box and use it to distribute and align that child box within its row.
+In a wrapping flex container, this rack includes the child's outer buffers, but they do not collapse with anything, since they are fenced off by the line that the item sits in.
+In a non-wrapping flex container, this instead works analogous to absolute layout.
+
+Determining a non-wrapping flex container's min and preferred size in the wrapping axis from its children works the same way it does for an absolute container.
+This is because the children are entirely independent of one another in that axis and their outer buffers collapse with the container's inner buffers.
+
+To determine a non-wrapping flex container's min size in the placement axis, sum up the min sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.
+
+To determine a flex container's preferred size in the placement axis, sum up the preferred sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.
+
+To determine a wrapping flex containers min size in the wrapping axis, sum up the min sizes of all lines in that axis plus the container's gaps and inner buffers.
+
+To determine a wrapping flex containers preferred size in the wrapping axis, sum up the preferred sizes of all lines in that axis plus the container's gaps and inner buffers.
+
+Determining a wrapping flex container's min size in the placement axis from its children works exactly like it does in an absolute container.
+This works since the min size implies that every child box is placed on its own row, at which point they are independent of one another in that axis.
 
 # Grid Layout
 Grid layout exists to position items in a grid-like arrangement.
@@ -159,6 +201,9 @@ This determines the wrapping axis size of all boxes.
 
 10. Align all row and column racks.
 
+11. Create racks on both axes for each child box and use them to distribute and align all child boxes within their rows and columns.
+These rack include the children's outer buffers, but they do not collapse with anything.
+
 # Rack
 A rack is a set of items in a row that want to be placed next to one another.
 A rack is one-dimensional.
@@ -187,7 +232,10 @@ Some layouts employ lines, which are a rack item that contains multiple boxes, p
 
 A line's min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
 If there is no items within the line, it's min size is 0.
+For purposes of this determination, a box's min size includes its outer buffers.
+A line does not itself have any outer buffers. Lines should generally be spaced by using gaps between them.
 
 A line's preferred size is the largest preferred size found among the boxes within it. (so that it can comfortably wrap all of them.)
 If no item within it has a preferred size, the line has no preferred size.
+For purposes of this determination, a box's preferred size also includes its outer buffers.
 This might seem unintuitive for grids, where one would imagine all items to be the same size, but grids where items are of different sizes are desireable. One example would be a grid of images with different aspect ratios.

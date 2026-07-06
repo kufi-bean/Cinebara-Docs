@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836677293786">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836688056958">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -43,11 +43,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.836677293786" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.836688056958" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836677293786" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836688056958" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836677293786" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836688056958" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -254,9 +254,53 @@ This also determines the wrapping axis sizes of all child boxes.</p>
 <p>This means that the container will resolve indefinite sizes to be at least its min size and also always large enough to fit any item if that item were centered.
 Alignment may want to align items to be fully or partially outside of the container and this still allows for that.
 It also leaves enough space for those items to slide fully into view.</p>
+<p>To determine an absolute container&#x27;s min size from its children, calculate each child box&#x27;s min size plus collapsed end buffers and take the largest of those.</p>
+<p>To determine an absolute container&#x27;s preferred size from its children, calculate each child box&#x27;s preferred size plus collapsed end buffers and take the largest of those.</p>
 <h1 id="flex-layout">Flex Layout</h1>
 <p>Flex layout exists to lay out items into lines of content that may or may not be allowed to wrap.
 Examples of this include toolbars, lines of text, or stacks of messages in a chat history.</p>
+<p>Flex layout is performed as follows:</p>
+<ol>
+<li>
+<p>Assign child boxes to flex rows.
+In a non-wrapping flex container, all children are placed in the same row.
+In a wrapping flex container, children are placed in rows at their preferred size (or min size if no preferred size is given) and placement wraps once placing a child would exceed the available size in the placement direction.
+Since gaps are only placed between items, so no gap is placed at the end of a row.</p>
+</li>
+<li>
+<p>Create a rack for each row and use it to distribute the items in that row.
+This also determines the placement axis sizes of all child boxes.</p>
+</li>
+<li>
+<p>Lay out all child boxes to determine their wrapping axis sizes.
+From now on, this size is used in place of the preferred size along the wrapping axis.</p>
+</li>
+<li>
+<p>If this is a wrapping flex container:
+(TODO: Wrapping and non-wrapping flex containers may want to be identical by leaving the outer edges of the first and last line open.)</p>
+<ol>
+<li>
+<p>Create a rack that contains one line for each row. This rack also contains the wrapping axis gaps and inner buffers of the flex container.</p>
+</li>
+<li>
+<p>Distribute and align that wrapping axis rack to position the rows.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Create a wrapping axis rack for each child box and use it to distribute and align that child box within its row.
+In a wrapping flex container, this rack includes the child&#x27;s outer buffers, but they do not collapse with anything, since they are fenced off by the line that the item sits in.
+In a non-wrapping flex container, this instead works analogous to absolute layout.</p>
+</li>
+</ol>
+<p>Determining a non-wrapping flex container&#x27;s min and preferred size in the wrapping axis from its children works the same way it does for an absolute container.
+This is because the children are entirely independent of one another in that axis and their outer buffers collapse with the container&#x27;s inner buffers.</p>
+<p>To determine a non-wrapping flex container&#x27;s min size in the placement axis, sum up the min sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.</p>
+<p>To determine a flex container&#x27;s preferred size in the placement axis, sum up the preferred sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.</p>
+<p>To determine a wrapping flex containers min size in the wrapping axis, sum up the min sizes of all lines in that axis plus the container&#x27;s gaps and inner buffers.</p>
+<p>To determine a wrapping flex containers preferred size in the wrapping axis, sum up the preferred sizes of all lines in that axis plus the container&#x27;s gaps and inner buffers.</p>
+<p>Determining a wrapping flex container&#x27;s min size in the placement axis from its children works exactly like it does in an absolute container.
+This works since the min size implies that every child box is placed on its own row, at which point they are independent of one another in that axis.</p>
 <h1 id="grid-layout">Grid Layout</h1>
 <p>Grid layout exists to position items in a grid-like arrangement.
 This is useful for tables and some general UI concepts.</p>
@@ -324,6 +368,10 @@ This determines the wrapping axis size of all boxes.</p>
 <li>
 <p>Align all row and column racks.</p>
 </li>
+<li>
+<p>Create racks on both axes for each child box and use them to distribute and align all child boxes within their rows and columns.
+These rack include the children&#x27;s outer buffers, but they do not collapse with anything.</p>
+</li>
 </ol>
 <h1 id="rack">Rack</h1>
 <p>A rack is a set of items in a row that want to be placed next to one another.
@@ -353,9 +401,12 @@ In this, the distributed rack is aligned inside of its parent, by placing the ra
 <h1 id="line">Line</h1>
 <p>Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack&#x27;s direction.</p>
 <p>A line&#x27;s min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
-If there is no items within the line, it&#x27;s min size is 0.</p>
+If there is no items within the line, it&#x27;s min size is 0.
+For purposes of this determination, a box&#x27;s min size includes its outer buffers.
+A line does not itself have any outer buffers. Lines should generally be spaced by using gaps between them.</p>
 <p>A line&#x27;s preferred size is the largest preferred size found among the boxes within it. (so that it can comfortably wrap all of them.)
 If no item within it has a preferred size, the line has no preferred size.
+For purposes of this determination, a box&#x27;s preferred size also includes its outer buffers.
 This might seem unintuitive for grids, where one would imagine all items to be the same size, but grids where items are of different sizes are desireable. One example would be a grid of images with different aspect ratios.</p>
 
                 
