@@ -2,14 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://docs.cinebara.com/</loc>
-    <lastmod>2026-07-06T23:20:40Z</lastmod>
+    <lastmod>2026-07-07T00:08:05Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/ui/</loc>
-    <lastmod>2026-07-06T23:20:40Z</lastmod>
+    <lastmod>2026-07-07T00:08:05Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/ui/quickstart/</loc>
-    <lastmod>2026-07-06T23:20:40Z</lastmod>
+    <lastmod>2026-07-07T00:08:05Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/cinebara_structure/</loc>
+    <lastmod>2026-07-07T00:08:05Z</lastmod>
   </url>
 </urlset>
