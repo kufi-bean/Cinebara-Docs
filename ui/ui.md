@@ -8,15 +8,36 @@ A line generalizes how to treat an entire row of boxes as a single rack item.
 This can happen when aligning the rows in a flex layout, but is most common in grid layout, where entire rows and columns are treated as single rack items.
 
 
-# Layout Modes
-Layout modes very roughly follow this logic:
-1. Distribute items via racks along the placement direction
-2. Run layout for the children now that their sizes in the placement-axis are determined
-3. Distribute items via racks in the wrapping direction.
+# Box
+A box is a core unit of the UI.
+For purposes of layout, it is a rectangle, whose size and position are to be determined.
+Boxes furthermore have inner and outer buffer regions, which allow them to be spaced from one another.
 
-Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box's own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.
+![A box with its inner and outer buffers](./images/box_anatomy.png)
 
-Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Its own layout then runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, and scrollbars appear.
+
+# Buffer
+Buffer is an amount of space around boxes that will not have content placed into it.
+Any box can have both inner and outer buffer on all sides.
+Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
+Buffer collapses with adjacent buffers of siblings and parents.
+Buffer never collapses through box boundaries.
+Buffer never collapses through gap decorations.
+A box's inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
+This is nice in cases where children might have large buffers to be used for spacing them away from other actual content, but the container's edges can be seen as the end of all content.
+The container's inner buffers are also far more concerned with giving an even spacing around children, to make the container look nice or to allow it to tightly wrap its child boxes regardless.
+A box's own inner buffers do not collapse with each other. This is because a box's inner buffer on a side is often what provides space for the box's border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.
+
+![An item's outer buffer collapsing with a container's inner buffer](./images/buffer_collapse_inner_outer.png)
+
+
+# Gaps
+A gap is a buffer inserted between items in a container.
+This includes gaps between things such as flex items and table rows and columns.
+It collapses with those item's outer buffers.
+
+![A gap buffer collapsing with two adjacent item's outer buffers](./images/buffer_collapse_gap_buffer.png)
+
 
 # Directions
 UI inherently exist in two dimensions, where it has a horizontal direction and a vertical direction. That said, for anything that will contain human text, it makes sense to conceptualize these as a primary and a secondary direction. English text has words going left to right, and if there is not enough space remaining, it wraps onto more lines, going downwards. We thus arrive at our terms for the X and Y axes: The placement direction and the wrapping direction.
@@ -35,14 +56,27 @@ Thus, all layout modes operate on the placement and wrapping directions, which m
 ![A visualization of placement and wrapping directions](./images/layout_directions_1.png)
 
 
+# Layout Modes
+Layout modes very roughly follow this logic:
+1. Distribute items via racks along the placement axis to determine their sizes in that direction.
+2. Run layout for the children now that their sizes in the placement axis are determined.
+3. Distribute items via racks in the wrapping direction.
+Here, the preferred sizes of any boxes are substituted for the sizes obtained during their layout.
+The idea behind this is that a box should, ideally, in the absence of any stretching or size limits, perfectly wrap its contents.
+
+Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box's own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.
+
+Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Then its own layout runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, inducing overflow.
+
+
 # Root Layout
-The root box positioned at an origin.
+The root box is positioned at an origin.
 It's self alignment is used to determine how exactly it sits on the origin.
-This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between)
+This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between, really)
 
 
 # Absolute Layout
-Absolute layout exists to position items absolutely, relative to their parent.
+Absolute layout exists to position boxes relative to their parent, without special alignment with regards to their siblings.
 Examples of this include centered modals, popups along the edges of a container and also draggable windows on a desktop.
 
 Absolute layout is performed as follows:
@@ -120,29 +154,6 @@ Whereas allowing the demanding spanners to perform their size increases first, m
 
 8. Re-run steps 2 through 6 for the wrapping direction, using the child boxes' laid-out sizes as their preferred sizes.
 
-# Box
-A box is a core unit of the UI.
-For purposes of layout, it is a rectangle, whose size and position are to be determined.
-
-![A box with its inner and outer buffers](./images/box_anatomy.png)
-
-# Buffer
-Buffer is an amount of space around items that will not have content placed into it.
-Any box has both inner and outer buffer on all sides.
-Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
-Buffer collapses with adjacent buffers of siblings and parents.
-Buffer never collapses through box boundaries.
-Buffer never collapses through gap decorations.
-A box's inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
-A box's own inner buffers do not collapse with each other. This is because a box's inner buffer on a side is often what provides space for the box's border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.
-
-![An item's outer buffer collapsing with a container's inner buffer](./images/buffer_collapse_inner_outer.png)
-
-# Gaps
-A gap is a buffer inserted between children of a container.
-It collapses with those children's outer buffers.
-
-![A gap buffer collapsing with two adjacent item's outer buffers](./images/buffer_collapse_gap_buffer.png)
 
 # Rack
 A rack is a set of items in a row that want to be placed next to one another.
