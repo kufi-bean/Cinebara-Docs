@@ -1,6 +1,11 @@
 ---
-categories: [nodes]
-tags: [not implemented, under discussion]
+category:
+  - nodes
+tags:
+  - not_implemented
+  - under_discussion
+label: Label
+author: Kufi
 ---
 
 # Label (Node)
