@@ -32,9 +32,11 @@ function broadcast_to(node, event_to_run)
 
 This can also be thought of as "ascending the tree", though this phrase can be confusing as trees are usually depicted upside-down. You ascend from the root to the leaf nodes, but you descend down the tree as depicted in a GUI.
 
-First, all ghost trees are processed in order of session age descending. Older ghosts are processed first. Then the stage is processed.
+Processing happens in this order:
 
-Some events may bypass certain trees for security or sensibility reasons. For example, your personal inputs are sent to your personal ghost and then to the stage. They are never propagated to other user's ghosts.
+1. The Cinebara UI
+2. All ghosts in the loaded session (oldest first)
+3. The loaded session's stage tree
 
 {{ for page in content.categories["nodes"].pages ~}}
 [!card layout="signal"]({{ page.path }})
