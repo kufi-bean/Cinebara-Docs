@@ -16,7 +16,7 @@ It's an app intended for making films in VR. It intends to offer a more accomoda
 
 # Explore the docs
 
-[!card layout="signal"](nodes/features.md)
+[!card layout="signal"](features.md)
 [!card layout="signal"](nodes/nodes.md)
 [!card layout="signal"](ui/ui.md)
 [!card layout="signal"](security.md)
