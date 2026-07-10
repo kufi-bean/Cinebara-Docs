@@ -1,4 +1,6 @@
 # UI
+
+## Core Observations
 In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner.
 For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.
 
@@ -7,14 +9,16 @@ A rack is a one-dimensional concept responsible for distributing and aligning a 
 A line generalizes how to treat an entire row of boxes as a single rack item.
 This can happen when aligning the rows in a flex layout, but is most common in grid layout, where entire rows and columns are treated as single rack items.
 
-# Box
+## Box
+
 A box is a core unit of the UI.
 For purposes of layout, it is a rectangle, whose size and position are to be determined.
 Boxes furthermore have inner and outer buffer regions, which allow them to be spaced from one another.
 
 ![A box with its inner and outer buffers](./images/box_anatomy.png)
 
-# Buffer
+## Buffer
+
 Buffer is an amount of space around boxes that will not have content placed into it.
 Any box can have both inner and outer buffer on all sides.
 Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
@@ -28,14 +32,16 @@ A box's own inner buffers do not collapse with each other. This is because a box
 
 ![An item's outer buffer collapsing with a container's inner buffer](./images/buffer_collapse_inner_outer.png)
 
-# Gaps
+## Gaps
+
 A gap is a buffer inserted between items in a container.
 This includes gaps between things such as flex items and table rows and columns.
 It collapses with those item's outer buffers.
 
 ![A gap buffer collapsing with two adjacent item's outer buffers](./images/buffer_collapse_gap_buffer.png)
 
-# Directions
+## Directions
+
 UI inherently exist in two dimensions, where it has a horizontal direction and a vertical direction. That said, for anything that will contain human text, it makes sense to conceptualize these as a primary and a secondary direction. English text has words going left to right, and if there is not enough space remaining, it wraps onto more lines, going downwards. We thus arrive at our terms for the X and Y axes: The placement direction and the wrapping direction.
 Every layout mode performs its layout according to these two directions.
 
@@ -51,7 +57,8 @@ Thus, all layout modes operate on the placement and wrapping directions, which m
 
 ![A visualization of placement and wrapping directions](./images/layout_directions_1.png)
 
-# Layout Modes
+## Layout Modes
+
 Layout modes very roughly follow this logic:
 
 1. Distribute items via racks along the placement axis to determine their sizes in that direction.
@@ -67,12 +74,14 @@ Before laying out a box, it may be of indefinite size along one or both axes. Th
 
 Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Then its own layout runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, inducing overflow.
 
-# Root Layout
+## Root Layout
+
 The root box is positioned at an origin.
 It's self alignment is used to determine how exactly it sits on the origin.
 This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between, really)
 
-# Absolute Layout
+## Absolute Layout
+
 Absolute layout exists to position boxes relative to their parent, without special alignment with regards to their siblings.
 Examples of this include centered modals, popups along the edges of a container and also draggable windows on a desktop.
 
@@ -102,11 +111,12 @@ This means that the container will resolve indefinite sizes to be at least its m
 Alignment may want to align items to be fully or partially outside of the container and this still allows for that.
 It also leaves enough space for those items to slide fully into view.
 
-To determine an absolute container's min size from its children, calculate each child box's min size plus collapsed end buffers and take the largest of those.
+To determine an absolute container's min size on an axis from its children, calculate the pre-distribution min size for each child box's rack in the given axis and take the largest of those.
 
-To determine an absolute container's preferred size from its children, calculate each child box's preferred size plus collapsed end buffers and take the largest of those.
+To determine an absolute container's preferred size on an axis from its children, calculate the pre-distribution preferred size for each child box's rack in the given axis and take the largest of those.
 
-# Flex Layout
+## Flex Layout
+
 Flex layout exists to lay out items into lines of content that may or may not be allowed to wrap.
 Examples of this include toolbars, lines of text, or stacks of messages in a chat history.
 
@@ -134,21 +144,17 @@ From now on, this size is used in place of the preferred size along the wrapping
 In a wrapping flex container, this rack includes the child's outer buffers, but they do not collapse with anything, since they are fenced off by the line that the item sits in.
 In a non-wrapping flex container, this instead works analogous to absolute layout.
 
-Determining a non-wrapping flex container's min and preferred size in the wrapping axis from its children works the same way it does for an absolute container.
-This is because the children are entirely independent of one another in that axis and their outer buffers collapse with the container's inner buffers.
+To determine a flex container's min size in the placement direction from its children, calculate the pre-distribution min size of each row rack and take the largest of those. If it's a wrapping glex container, assume that it wrapped after every item.
 
-To determine a non-wrapping flex container's min size in the placement axis, sum up the min sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.
+To determine a flex container's min size in the wrapping direction from its children, calculate the pre-distribution min size of a rack that contains one line for all children.
 
-To determine a flex container's preferred size in the placement axis, sum up the preferred sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.
+To determine a flex container's preferred size in the placement direction from its children, calculate the pre-distribution preferred size of the row rack you would get if all items were placed in one row.
 
-To determine a wrapping flex containers min size in the wrapping axis, sum up the min sizes of all lines in that axis plus the container's gaps and inner buffers.
+To determine a flex container's preferred size in the wrapping direction from its children, calculate the pre-distribution preferred size of a rack that contains one line for all children.
+TODO: Is this correct in a multiline (wrapping) flex container?
 
-To determine a wrapping flex containers preferred size in the wrapping axis, sum up the preferred sizes of all lines in that axis plus the container's gaps and inner buffers.
+## Grid Layout
 
-Determining a wrapping flex container's min size in the placement axis from its children works exactly like it does in an absolute container.
-This works since the min size implies that every child box is placed on its own row, at which point they are independent of one another in that axis.
-
-# Grid Layout
 Grid layout exists to position items in a grid-like arrangement.
 This is useful for tables and some general UI concepts.
 
@@ -204,7 +210,10 @@ This determines the wrapping axis size of all boxes.
 11. Create racks on both axes for each child box and use them to distribute and align all child boxes within their rows and columns.
 These rack include the children's outer buffers, but they do not collapse with anything.
 
-# Rack
+TODO: How to calculate min/preferred sizes from a grid's content?
+
+## Rack
+
 A rack is a set of items in a row that want to be placed next to one another.
 A rack is one-dimensional.
 There is two operations that can be done on a rack:
@@ -226,7 +235,7 @@ A rack item consists of:
     - a preferred size (dots or indefinite)
     - a maximum size (dots or indefinite)
 
-# Line
+## Line
 
 Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack's direction.
 

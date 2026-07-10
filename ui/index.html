@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836975271750">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.837032495915">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -43,11 +43,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.836975271750" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.837032495915" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836975271750" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.837032495915" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836975271750" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.837032495915" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -140,13 +140,14 @@
 
                 <!-- Page content  -->
 <h1 id="ui">UI</h1>
+<h2 id="core-observations">Core Observations</h2>
 <p>In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner.
 For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.</p>
 <p>These primitives are racks and lines, which are used by all layout modes to achieve their goals.
 A rack is a one-dimensional concept responsible for distributing and aligning a set of items into some available space on an axis.
 A line generalizes how to treat an entire row of boxes as a single rack item.
 This can happen when aligning the rows in a flex layout, but is most common in grid layout, where entire rows and columns are treated as single rack items.</p>
-<h1 id="box">Box</h1>
+<h2 id="box">Box</h2>
 <p>A box is a core unit of the UI.
 For purposes of layout, it is a rectangle, whose size and position are to be determined.
 Boxes furthermore have inner and outer buffer regions, which allow them to be spaced from one another.</p>
@@ -154,7 +155,7 @@ Boxes furthermore have inner and outer buffer regions, which allow them to be sp
     <img src="images/box_anatomy.png" alt="A box with its inner and outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="332" height="404" />
     <figcaption class="caption">A box with its inner and outer buffers</figcaption>
 </figure>
-<h1 id="buffer">Buffer</h1>
+<h2 id="buffer">Buffer</h2>
 <p>Buffer is an amount of space around boxes that will not have content placed into it.
 Any box can have both inner and outer buffer on all sides.
 Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
@@ -169,7 +170,7 @@ A box&#x27;s own inner buffers do not collapse with each other. This is because 
     <img src="images/buffer_collapse_inner_outer.png" alt="An item's outer buffer collapsing with a container's inner buffer" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="369" height="369" />
     <figcaption class="caption">An item's outer buffer collapsing with a container's inner buffer</figcaption>
 </figure>
-<h1 id="gaps">Gaps</h1>
+<h2 id="gaps">Gaps</h2>
 <p>A gap is a buffer inserted between items in a container.
 This includes gaps between things such as flex items and table rows and columns.
 It collapses with those item&#x27;s outer buffers.</p>
@@ -177,7 +178,7 @@ It collapses with those item&#x27;s outer buffers.</p>
     <img src="images/buffer_collapse_gap_buffer.png" alt="A gap buffer collapsing with two adjacent item's outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="784" height="752" />
     <figcaption class="caption">A gap buffer collapsing with two adjacent item's outer buffers</figcaption>
 </figure>
-<h1 id="directions">Directions</h1>
+<h2 id="directions">Directions</h2>
 <p>UI inherently exist in two dimensions, where it has a horizontal direction and a vertical direction. That said, for anything that will contain human text, it makes sense to conceptualize these as a primary and a secondary direction. English text has words going left to right, and if there is not enough space remaining, it wraps onto more lines, going downwards. We thus arrive at our terms for the X and Y axes: The placement direction and the wrapping direction.
 Every layout mode performs its layout according to these two directions.</p>
 <p>And while in English, these always correspond to the horizontal and vertical axes in the same way, this is not necessarily the case in other languages, such as Arabic or Mongolian. Arabic goes right to left, whereas Mongolian places text top to bottom.</p>
@@ -195,7 +196,7 @@ Every layout mode performs its layout according to these two directions.</p>
     <img src="images/layout_directions_1.png" alt="A visualization of placement and wrapping directions" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="452" height="292" />
     <figcaption class="caption">A visualization of placement and wrapping directions</figcaption>
 </figure>
-<h1 id="layout-modes">Layout Modes</h1>
+<h2 id="layout-modes">Layout Modes</h2>
 <p>Layout modes very roughly follow this logic:</p>
 <ol>
 <li>
@@ -212,11 +213,11 @@ Every layout mode performs its layout according to these two directions.</p>
 The idea behind this is that a box should, ideally, in the absence of any stretching or size limits, perfectly wrap its contents.</p>
 <p>Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box&#x27;s own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.</p>
 <p>Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Then its own layout runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, inducing overflow.</p>
-<h1 id="root-layout">Root Layout</h1>
+<h2 id="root-layout">Root Layout</h2>
 <p>The root box is positioned at an origin.
 It&#x27;s self alignment is used to determine how exactly it sits on the origin.
 This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between, really)</p>
-<h1 id="absolute-layout">Absolute Layout</h1>
+<h2 id="absolute-layout">Absolute Layout</h2>
 <p>Absolute layout exists to position boxes relative to their parent, without special alignment with regards to their siblings.
 Examples of this include centered modals, popups along the edges of a container and also draggable windows on a desktop.</p>
 <p>Absolute layout is performed as follows:</p>
@@ -254,9 +255,9 @@ This also determines the wrapping axis sizes of all child boxes.</p>
 <p>This means that the container will resolve indefinite sizes to be at least its min size and also always large enough to fit any item if that item were centered.
 Alignment may want to align items to be fully or partially outside of the container and this still allows for that.
 It also leaves enough space for those items to slide fully into view.</p>
-<p>To determine an absolute container&#x27;s min size from its children, calculate each child box&#x27;s min size plus collapsed end buffers and take the largest of those.</p>
-<p>To determine an absolute container&#x27;s preferred size from its children, calculate each child box&#x27;s preferred size plus collapsed end buffers and take the largest of those.</p>
-<h1 id="flex-layout">Flex Layout</h1>
+<p>To determine an absolute container&#x27;s min size on an axis from its children, calculate the pre-distribution min size for each child box&#x27;s rack in the given axis and take the largest of those.</p>
+<p>To determine an absolute container&#x27;s preferred size on an axis from its children, calculate the pre-distribution preferred size for each child box&#x27;s rack in the given axis and take the largest of those.</p>
+<h2 id="flex-layout">Flex Layout</h2>
 <p>Flex layout exists to lay out items into lines of content that may or may not be allowed to wrap.
 Examples of this include toolbars, lines of text, or stacks of messages in a chat history.</p>
 <p>Flex layout is performed as follows:</p>
@@ -293,15 +294,12 @@ In a wrapping flex container, this rack includes the child&#x27;s outer buffers,
 In a non-wrapping flex container, this instead works analogous to absolute layout.</p>
 </li>
 </ol>
-<p>Determining a non-wrapping flex container&#x27;s min and preferred size in the wrapping axis from its children works the same way it does for an absolute container.
-This is because the children are entirely independent of one another in that axis and their outer buffers collapse with the container&#x27;s inner buffers.</p>
-<p>To determine a non-wrapping flex container&#x27;s min size in the placement axis, sum up the min sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.</p>
-<p>To determine a flex container&#x27;s preferred size in the placement axis, sum up the preferred sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.</p>
-<p>To determine a wrapping flex containers min size in the wrapping axis, sum up the min sizes of all lines in that axis plus the container&#x27;s gaps and inner buffers.</p>
-<p>To determine a wrapping flex containers preferred size in the wrapping axis, sum up the preferred sizes of all lines in that axis plus the container&#x27;s gaps and inner buffers.</p>
-<p>Determining a wrapping flex container&#x27;s min size in the placement axis from its children works exactly like it does in an absolute container.
-This works since the min size implies that every child box is placed on its own row, at which point they are independent of one another in that axis.</p>
-<h1 id="grid-layout">Grid Layout</h1>
+<p>To determine a flex container&#x27;s min size in the placement direction from its children, calculate the pre-distribution min size of each row rack and take the largest of those. If it&#x27;s a wrapping glex container, assume that it wrapped after every item.</p>
+<p>To determine a flex container&#x27;s min size in the wrapping direction from its children, calculate the pre-distribution min size of a rack that contains one line for all children.</p>
+<p>To determine a flex container&#x27;s preferred size in the placement direction from its children, calculate the pre-distribution preferred size of the row rack you would get if all items were placed in one row.</p>
+<p>To determine a flex container&#x27;s preferred size in the wrapping direction from its children, calculate the pre-distribution preferred size of a rack that contains one line for all children.
+TODO: Is this correct in a multiline (wrapping) flex container?</p>
+<h2 id="grid-layout">Grid Layout</h2>
 <p>Grid layout exists to position items in a grid-like arrangement.
 This is useful for tables and some general UI concepts.</p>
 <p>Grid layout is performed as follows:</p>
@@ -373,7 +371,8 @@ This determines the wrapping axis size of all boxes.</p>
 These rack include the children&#x27;s outer buffers, but they do not collapse with anything.</p>
 </li>
 </ol>
-<h1 id="rack">Rack</h1>
+<p>TODO: How to calculate min/preferred sizes from a grid&#x27;s content?</p>
+<h2 id="rack">Rack</h2>
 <p>A rack is a set of items in a row that want to be placed next to one another.
 A rack is one-dimensional.
 There is two operations that can be done on a rack:</p>
@@ -398,7 +397,7 @@ In this, the distributed rack is aligned inside of its parent, by placing the ra
 - a minimum size (dots)
 - a preferred size (dots or indefinite)
 - a maximum size (dots or indefinite)</p>
-<h1 id="line">Line</h1>
+<h2 id="line">Line</h2>
 <p>Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack&#x27;s direction.</p>
 <p>A line&#x27;s min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
 If there is no items within the line, it&#x27;s min size is 0.
