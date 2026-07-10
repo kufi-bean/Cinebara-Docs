@@ -24,84 +24,84 @@ A fully language agnostic UI layout system that supports 3D offsets, flex, grids
 
 Read more on [the UI page](ui/ui.md).
 
-## icon-cinebara-question  In-world editing
+## :icon-cinebara-question:  In-world editing
 
 Build [Stages](stages.md) completely within Cinebara either in a Desktop or VR interface. 
 
-## icon-cinebara-question  Collaborative editing
+## :icon-cinebara-question:  Collaborative editing
 
 Connect to other Users and work on one [Stage](stages.md) at the same time.
 
 ## :icon-cinebara-develop: Physics simulation
 
-## icon-cinebara-question  Mesh skinning
+## :icon-cinebara-question:  Mesh skinning
 
 Deforming an otherwise static mesh with an armature which allows for more complex characters with squishy limbs.
 
-## icon-cinebara-question  Importing characters
+## :icon-cinebara-question:  Importing characters
 
 Bringing a "character" in from a format like `fbx`, `gltf`, or whatever we can find a library for. This process involves reading a mesh and skinning it with a provided armature, applying some procedural animation (like IK) to it, and providing the ability to "take control" of it.
 
-## icon-cinebara-question  Secondary motion
+## :icon-cinebara-question:  Secondary motion
 
-## icon-cinebara-question  Ragdolls
+## :icon-cinebara-question:  Ragdolls
 
-## icon-cinebara-question  Squishy surfaces
+## :icon-cinebara-question:  Squishy surfaces
 
-## icon-cinebara-question  Particles
+## :icon-cinebara-question:  Particles
 
-## icon-cinebara-question  Realtime GI
+## :icon-cinebara-question:  Realtime GI
 
-## icon-cinebara-question  Dolly / racks
+## :icon-cinebara-question:  Dolly / racks
 
-## icon-cinebara-question  Animations
+## :icon-cinebara-question:  Animations
 
-## icon-cinebara-question  Timelines
+## :icon-cinebara-question:  Timelines
 
-## icon-cinebara-question  Timeline modifiers
+## :icon-cinebara-question:  Timeline modifiers
 
 Procedural effects on pre-recorded performances, such as smoothing out jitter, retiming an action, lowering the framerate, or simulating momentum on movements.
 
-## icon-cinebara-question  Snapshots
+## :icon-cinebara-question:  Snapshots
 
-## icon-cinebara-question  Scripting
+## :icon-cinebara-question:  Scripting
 
-## icon-cinebara-question  Custom Shaders
+## :icon-cinebara-question:  Custom Shaders
 
-## icon-cinebara-question  Raytracing
+## :icon-cinebara-question:  Raytracing
 
-## icon-cinebara-question  Asset streaming
+## :icon-cinebara-question:  Asset streaming
 
-## icon-cinebara-question  World Streaming
+## :icon-cinebara-question:  World Streaming
 
-## icon-cinebara-question  Entities
+## :icon-cinebara-question:  Entities
 
-## icon-cinebara-question  Decals
+## :icon-cinebara-question:  Decals
 
 ## :icon-cinebara-develop: Post Processing
 
-## icon-cinebara-question  Procedural textures
+## :icon-cinebara-question:  Procedural textures
 
-## icon-cinebara-question  Performing in alternative time scales
+## :icon-cinebara-question:  Performing in alternative time scales
 
-## icon-cinebara-question  OSC
+## :icon-cinebara-question:  OSC
 
-## icon-cinebara-question  Finger wrapping
+## :icon-cinebara-question:  Finger wrapping
 
-## icon-cinebara-question  Lightmaps
+## :icon-cinebara-question:  Lightmaps
 
-## icon-cinebara-question  Convex decomposition
+## :icon-cinebara-question:  Convex decomposition
 
-## icon-cinebara-question  Video export
+## :icon-cinebara-question:  Video export
 
-## icon-cinebara-question  Spout Stream
+## :icon-cinebara-question:  Spout Stream
 
-## icon-cinebara-question  File Linking
+## :icon-cinebara-question:  File Linking
 
 Link a file from the engine to one on the disc for realtime feedback of your changes in an external editor.
 
-## icon-cinebara-question  Full body estimation
+## :icon-cinebara-question:  Full body estimation
 
-## icon-cinebara-question  Limb simulation decoupling
+## :icon-cinebara-question:  Limb simulation decoupling
 
 Limbs could be simulated separately from the IK driven body to allow for more autonomous performances. Legs in 0G, a tail twitching or reacting to touch.
