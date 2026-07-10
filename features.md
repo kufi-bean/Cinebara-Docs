@@ -9,7 +9,7 @@ Most of these features are not implemented! This document is more of an introduc
 {.compact .striped}
 Icon | Status | Description |
 --- | --- | --- |
-:icon-cinebara-discussion: | Under Discussion | The idea for the feature is known and may be implemented after discussion. |
+:icon-cinebara-question: | Under Discussion | The idea for the feature is known and may be implemented after discussion. |
 :icon-cinebara-develop: | In Development | The feature is being actively worked on but is not yet ready for use. |
 :icon-cinebara-testing: | In Testing | The feature is available in engine but potentially unstable. |
 ✅ | Implemented | The feature has been proven stable and is ready and available for regular use. |
@@ -24,84 +24,84 @@ A fully language agnostic UI layout system that supports 3D offsets, flex, grids
 
 Read more on [the UI page](ui/ui.md).
 
-## :icon-cinebara-discussion:  In-world editing
+## icon-cinebara-question  In-world editing
 
 Build [Stages](stages.md) completely within Cinebara either in a Desktop or VR interface. 
 
-## :icon-cinebara-discussion:  Collaborative editing
+## icon-cinebara-question  Collaborative editing
 
 Connect to other Users and work on one [Stage](stages.md) at the same time.
 
 ## :icon-cinebara-develop: Physics simulation
 
-## :icon-cinebara-discussion:  Mesh skinning
+## icon-cinebara-question  Mesh skinning
 
 Deforming an otherwise static mesh with an armature which allows for more complex characters with squishy limbs.
 
-## :icon-cinebara-discussion:  Importing characters
+## icon-cinebara-question  Importing characters
 
 Bringing a "character" in from a format like `fbx`, `gltf`, or whatever we can find a library for. This process involves reading a mesh and skinning it with a provided armature, applying some procedural animation (like IK) to it, and providing the ability to "take control" of it.
 
-## :icon-cinebara-discussion:  Secondary motion
+## icon-cinebara-question  Secondary motion
 
-## :icon-cinebara-discussion:  Ragdolls
+## icon-cinebara-question  Ragdolls
 
-## :icon-cinebara-discussion:  Squishy surfaces
+## icon-cinebara-question  Squishy surfaces
 
-## :icon-cinebara-discussion:  Particles
+## icon-cinebara-question  Particles
 
-## :icon-cinebara-discussion:  Realtime GI
+## icon-cinebara-question  Realtime GI
 
-## :icon-cinebara-discussion:  Dolly / racks
+## icon-cinebara-question  Dolly / racks
 
-## :icon-cinebara-discussion:  Animations
+## icon-cinebara-question  Animations
 
-## :icon-cinebara-discussion:  Timelines
+## icon-cinebara-question  Timelines
 
-## :icon-cinebara-discussion:  Timeline modifiers
+## icon-cinebara-question  Timeline modifiers
 
 Procedural effects on pre-recorded performances, such as smoothing out jitter, retiming an action, lowering the framerate, or simulating momentum on movements.
 
-## :icon-cinebara-discussion:  Snapshots
+## icon-cinebara-question  Snapshots
 
-## :icon-cinebara-discussion:  Scripting
+## icon-cinebara-question  Scripting
 
-## :icon-cinebara-discussion:  Custom Shaders
+## icon-cinebara-question  Custom Shaders
 
-## :icon-cinebara-discussion:  Raytracing
+## icon-cinebara-question  Raytracing
 
-## :icon-cinebara-discussion:  Asset streaming
+## icon-cinebara-question  Asset streaming
 
-## :icon-cinebara-discussion:  World Streaming
+## icon-cinebara-question  World Streaming
 
-## :icon-cinebara-discussion:  Entities
+## icon-cinebara-question  Entities
 
-## :icon-cinebara-discussion:  Decals
+## icon-cinebara-question  Decals
 
 ## :icon-cinebara-develop: Post Processing
 
-## :icon-cinebara-discussion:  Procedural textures
+## icon-cinebara-question  Procedural textures
 
-## :icon-cinebara-discussion:  Performing in alternative time scales
+## icon-cinebara-question  Performing in alternative time scales
 
-## :icon-cinebara-discussion:  OSC
+## icon-cinebara-question  OSC
 
-## :icon-cinebara-discussion:  Finger wrapping
+## icon-cinebara-question  Finger wrapping
 
-## :icon-cinebara-discussion:  Lightmaps
+## icon-cinebara-question  Lightmaps
 
-## :icon-cinebara-discussion:  Convex decomposition
+## icon-cinebara-question  Convex decomposition
 
-## :icon-cinebara-discussion:  Video export
+## icon-cinebara-question  Video export
 
-## :icon-cinebara-discussion:  Spout Stream
+## icon-cinebara-question  Spout Stream
 
-## :icon-cinebara-discussion:  File Linking
+## icon-cinebara-question  File Linking
 
 Link a file from the engine to one on the disc for realtime feedback of your changes in an external editor.
 
-## :icon-cinebara-discussion:  Full body estimation
+## icon-cinebara-question  Full body estimation
 
-## :icon-cinebara-discussion:  Limb simulation decoupling
+## icon-cinebara-question  Limb simulation decoupling
 
 Limbs could be simulated separately from the IK driven body to allow for more autonomous performances. Legs in 0G, a tail twitching or reacting to touch.

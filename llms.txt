@@ -8,6 +8,7 @@
 - [Features](https://docs.cinebara.com/features.md): A list of features that are either planned or implemented.
 - [Input](https://docs.cinebara.com/input.md): Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like "move forward").
 - [Interface](https://docs.cinebara.com/interface.md): UI is not yet implemented
+- [Rendering](https://docs.cinebara.com/rendering/rendering.md): Describes the general process for rendering the Cinebara window.
 - [Security](https://docs.cinebara.com/security.md): Promises, contracts, and disclaimers that curious users may be interested to know about.
 - [Sessions](https://docs.cinebara.com/sessions.md): A container for a Stage to be performed on or edited by networked collaborators.
 - [Stages](https://docs.cinebara.com/stages.md): An environment to build or perform on.
