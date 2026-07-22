@@ -285,7 +285,14 @@ To make this easier to follow, I will work from the smallest concept up to the f
 
 The final data structure will hold many clusters. A cluster is a region definable with a world-space AABB which holds a list of items which may have an effect on any position sampled within its bounds. It is worth noting that the bounds of the clusters aren't actually defined anywhere- Rather, they are a helpful tool to explain what a cluster is. The bounds do conceptually exist as each cluster is attributed to some region in world-space, but this relationship is implicitly inherited from the cascade it is within.
 
-Items are added to cells based on if the item can possibly have an effect on any position sampled within the cell. A light, for the sake of performance, has a maximum range of effect. Any light whose sphere of influence intersects the bounds of the cell should be included in the item list of the cell.
+Items are added to clusters based on if the item can possibly have an effect on any position sampled within the cluster. A light, for the sake of performance, has a maximum range of effect. Any light whose sphere of influence intersects the bounds of the cluster should be included in the item list of the cluster.
+
+```wgsl Definition
+struct Cluster {
+    items: array<u32>,
+    count: u32,
+}
+```
 
 ## A single cascade layer
 
@@ -295,35 +302,35 @@ A 3D grid of clusters forms one layer of the full data structure, a "cascade". E
 struct ClusterCascade {
     min: vec3f,
     max: vec3f,
-    clusters: array<Cluster>
 }
 ```
 
-Indexing into a cascade is done as follows:
+As shown, clusters are stored in a 1D array. Each cluster is given some slice of this array. The size of a cascade's slice is $cascadeSize^3$, so given the index of the cascade, the start offset of the slice would be $cascadeIndex\times cascadeSize^3$
 
-```wgsl
+```wgsl Getting a slice into the Clusters array
 let cascadeSize: u32 = 16u;
 
-fn getClusterIndex(cascade: ClusterCascade, position: vec3f) -> u32 {
-    let uvw = (position - cascade.min) / (cascade.max - cascade.min);
-    let clusterId = floor(uvw * vec3f(cascadeSize));
-    return 
-        (clusterId.x * cascadeSize * cascadeSize) +
-        (clusterId.y * cascadeSize) +
-        clusterId.z;
+fn getClustersSlice(cascadeIndex: u32) -> vec2<u32> {
+    let clustersSliceSize = cascadeSize * cascadeSize * cascadeSize;
+    let clustersSliceStart = cascadeIndex * clustersSliceSize;
+    return vec2(clusterSliceStart, clustersSliceSize);
 }
 ```
 
-This can then be used to access the clusters array.
+The slice is enough to let us index into the clusters given some xyz offset. The offset is composed of `u32`s.
 
-```wgsl Accessing the clusters array
-fn getCluster(cascade: ClusterCascade, position: vec3f) -> Cluster {
-    return cascade.clusters[getClusterIndex(cluster, position)];
+```wgsl Getting the index of a cluster from xyz offset
+...
+fn clusterOffsetToIndex(offset: vec3<u32>) -> u32 {
+    return
+        (offset.x * cascadeSize * cascadeSize) +
+        (offset.y * cascadeSize) +
+        offset.z;
 }
 ```
 
 !!!warning
-These functions assumes the position is within the bounds of the cascade.
+This function assumes the position is within the bounds of the cascade.
 !!!
 
 ## Stacked cascades
@@ -336,6 +343,105 @@ Far away clusters could be very large and have a lot of items. This could be rea
 
 ## Updating the clusters
 
+All cascades are stored in a contiguous buffer which will be bound for a compute shader to write into. Alongside the cascades is an array of all of the items in the scene.
+
+```wgsl Items Structure
+struct ClusterItem {
+    transform: mat4x4<f32>,
+    min: vec3<f32>,
+    max: vec3<f32>,
+    id: u32,
+}
+
+var<storage, read> items: array<ClusterItem>;
+```
+
+An AABB overlap check is done for each item / cluster pair in each cascade to find which items affect which clusters.
+
+The last field in the item is `id`. This is a bit-packed id that describes what the item and what configuration it has. More on this in the section for [sampling the clusters](#sampling-the-clusters).
+
+A compute dispatch is called once for each cascade. The compute process for updating one cascade looks something like this:
+
+```wgsl
+...
+// Input
+var<uniform> cascades: array<ClusterCascade>;
+var<storage, read> items: array<ClusterItem>;
+var<immediate> cascadeToUpdate: u32;
+
+// Output
+var<storage, write> clusters: array<Cluster>;
+
+@compute @workgroup_size(8, 8, 8)
+fn updateClusters(@builtin(global_invocation_id) id: vec3<u32>) {
+    let cascade = cascades[cascadeToUpdate];
+
+    let targetCluster = clusters[getClusterSlice(cascadeToUpdate).x + clusterOffsetToIndex(id)];
+    targetCluster.count = 0u;
+
+    let cascadeRegionSize = cascade.max - cascade.min;
+    let clusterRegionSize = cascadeRegionSize / clusterSize;
+    let clusterMin = cascade.min + clusterRegionSize * vec3f(id);
+    let clusterMax = clusterMin + clusterRegionSize;
+
+    // Find which items belong to this cluster
+    for(let i = 0u; i < arrayLength(items); i++) {
+        let item = items[i];
+        
+        if(item.max.x < cluster.min.x || item.max.y < cluster.min.y || item.max.z < cluster.min.z ||
+           item.min.x > cluster.max.x || item.min.y > cluster.max.y || item.min.z > cluster.max.z) {
+               continue;
+           }
+
+        targetCluster[targetCluster.count] = i;
+        targetCluster.count++;
+    }
+}
+```
+
+!!!
+All cascades should be updated before any real drawing happens, but for performance reasons we might consider to only update one cascade a frame. This would make lights look like they're running at `fps / cascadeCount` frames per second, which clearly isn't ideal. Instead, we update the inner-most cascade every frame, and then amortize the rest of the cascades over `cascadeCount - 1` frames.
+
+In the final output, all cascades are always updated every frame.
+!!!
+
+## Sampling the clusters
+
+Given some world position $position$, we want to get the specific cluster to sample and iterate the items of. To do this, we first need to know the smallest cascade we are contained within is. 
+
+Each cascade has extents which are two times larger than the one before it. This means that on each axis, each cascade's "shell" reaches twice as far as the one before it. Let $maxAxis$ be the maximum axis of $|position - clustersOrigin|$, which provides a distance that can be used to figure out which shell we are within. $\lfloor\sqrt\frac{maxAxis}{2}\rfloor$ then provides the index of the shell to sample.
+
+```wgsl Finding the appropriate cascade index
+let cascadesCenter: vec3f;
+
+fn getCascadeIndex(position: vec3f) -> u32 {
+    let smallestCascadeRegionSize = cascaces[0].max - cascades[0].min;
+    let localPosition = (position - cascadesCenter) / smallestCascadeRegionSize;
+    let absPosition = abs(localPosition);
+    let maxAxis = max(absPosition.x, absPosition.y, absPosition.z);
+    return u32(floor(sqrt(maxAxis)));
+}
+```
+
+This function should always provide the smallest cascade that $position$ is contained within. If the result is greater than the number of cascades minus 1, then you are beyond the bounds of the cascades and should not be sampling from clusters.
+
+With that, we can sample the clusters of the cascade using this function: 
+
+```wgsl Getting the cluster from a world-space position
+...
+
+fn getClusterIndex(cascadeIndex: u32, position: vec3f) -> u32 {
+    let slice = getClustersSlice(cascadeIndex);
+
+    let cascade = cascades[cascadeIndex];
+    let uvw = (position - cascade.min) / (cascade.max - cascade.min);
+    let clusterOffset = vec3<u32>(floor(uvw * vec3f(cascadeSize)));
+    let clusterIndex = clusterOffsetToIndex(clusterOffset);
+    
+    return clustersSliceStart + clusterIndex;
+}
+```
+
 ---
 
 ## Global Illumination
@@ -344,7 +450,15 @@ Far away clusters could be very large and have a lot of items. This could be rea
 
 An overview of the rendering features that are planned or available in Cinebara.
 
-### PBR
+---
+
+# PBR
+
+We follow the [OpenPBR standard](https://academysoftwarefoundation.github.io/OpenPBR/) with a few modifications. Let's go over the primary structure that makes up the pbr workflow.
+
+A PBR material may have an arbitrary number of layers, each layer defines some special rendering technique and the layers may be blended to achieve emulation of micro-details, like fine scratches on metal providing additional specular highlights.
+
+---
 
 ### Raytracing
 

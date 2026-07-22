@@ -9,9 +9,14 @@ description: The building block of a Stage, Nodes provide structure and behaviou
 A Node is a thing which may have other Nodes as children. A Node's parent is the singular Node that it is a child of. A Node can not have more than one parent, but it may have no parent at all.
 
 # Trees
+
 A Node with no parent is considered the root of its tree. A tree is all Nodes descendant of a root Node and the root itself. A Node's relationships (its parent & children) are always transparent, as in, they are always readable.
 
 There are many types of Nodes, all of which have their own specific purpose. As a general rule, a Node should have at most one purpose.
+
+## Tree diffs
+
+Trees can be compared to see what differences they have, a process called "diffing". The result of diffing is a "diff", a list of changes that need to be made to go from one tree to another. 
 
 # Ghosts
 

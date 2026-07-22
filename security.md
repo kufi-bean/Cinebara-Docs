@@ -36,16 +36,16 @@ Such responses could result in a Node's intentions becoming unclear. If a Node i
 The consequence of this is that an entire Tree is readable if you have a reference to just one Node in that Tree.
 
 ### Hidden Ghosts {#hidden-ghost}
-Nodes that are a part of a [Ghost's](nodes/nodes.md#ghosts) tree must not be accessed by a Stage.
+Nodes that are a part of a [Ghost's](nodes/nodes.md#ghosts) tree must not be discoverable by any other tree.
 
 Modification of a Ghost could be a malicious attack vector. A Ghost must be a safe object for the User and so a User must remain completely in control of it.
 
 *Personal Characters may also be in this Tree, but this is under discussion.*
 
-### No Foreign Tree References {#no-foreign-tree-references}
-A Property should never hold a reference to a Node which belongs to a different Tree than the Property is a part of. 
+### Undiscoverable Trees {#undiscoverable-trees}
+A tree must never be discoverable from nothing. 
 
-Access to one Node in a different tree provides access to the entire Tree that Node belongs to. Such access violates the [Hidden Ghosts](#hidden-ghosts) contract.
+You can reference foreign trees as long as the foreign tree was either in the same tree at some point before, or a daisy chain of references lead to it. This is important to keep Ghosts from being discovered from nothing which would violate [Hidden Ghosts](#hidden-ghosts)
 
 ---
 

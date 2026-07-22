@@ -27,10 +27,10 @@ Does selecting a Node show the bounds of all of the children? What about a share
 ## Select
 
 !!!warning
-Selection is not yet implemented.
+Selection is not fully implemented.
 !!!
 
-Clicking on a Node wth a defined surface will select it. If there are multiple Nodes intersecting the ray you clicked, clicking again will progressively increment through the intersected Nodes. Clicking and dragging will select all Nodes that intersect the drawn box that are also deemed "visible". This visibility check can be disabled. In VR, the visibility check is not done as you are drawing a 3D box and so such a concept doesn't mean anything.
+Clicking on a Node wth a "surface" will select it. If there are multiple Nodes intersecting the ray you clicked, clicking again will progressively increment through the intersected Nodes. Clicking and dragging will select all Nodes that intersect the drawn box that are also deemed "visible". This visibility check can be disabled. In VR, the visibility check is not done as you are drawing a 3D box and so such a concept doesn't mean anything.
 
 Holding [Shift] and clicking an unselected Node will expand your selection to contain the new Node. If you clicked a Node which was already selected, it will remove the Node from your selection instead. The same [Shift] modification can be applied to the box selection, but it will always expand your selection. Holding [Ctrl] + [Shift] will deselect.
 
