@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.838072676393">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.841200614352">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,12 +37,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.838072676393" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.841200614352" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.838072676393" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.838072676393" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../resources/js/prism.js?v=4.6.0.838072676393" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../resources/js/prism.js?v=4.6.0.841200614352" defer></script>
     <script id="mermaid-js" data-cfasync="false" src="../resources/js/mermaid.js?v=4.6.0" defer></script>
     <link href="../resources/css/katex.css?v=4.6.0" rel="stylesheet">
     <script id="katex-js" data-cfasync="false" src="../resources/js/katex.js?v=4.6.0" defer></script>
@@ -141,7 +141,7 @@
 <div id="retype-page-description" class="description-display text-description font-description leading-description mb-description-margin-bottom mt-description-margin-top tracking-description text-transform-description">Describes the general process for rendering the Cinebara window.</div>
 <p>The goal of Cinebara&#x27;s renderer is to present a high quality image for film. This means that performance typically comes second to fidelity. That being said, you also need to be able to act in Cinebara so expensive operations may be skipped for those purposes. In an ideal world we would not have to consider performance while acting, but this is the digital realm where everything is fighting for CPU/GPU time.</p>
 <p>This document is going to be technical. For rendering features, skip to the <doc-anchor-trigger to="#features">features section</doc-anchor-trigger>.</p>
-<p>Cinbeara uses a forward clustered pipeline with bindless dispatch where possible. An outline of the pipeline flow is as follows:</p>
+<p>Cinebara uses a forward clustered pipeline with bindless dispatch where possible. An outline of the planned pipeline flow is as follows:</p>
 <style>
     .dark\:bg-white {
         background: transparent
@@ -217,7 +217,7 @@ setup--&gt;gi &amp; depth_prepass--&gt;draw--&gt;post_processing--&gt;present</p
 <p>It&#x27;s a bit more involved than that, so if you are interested in how it works, check out <a href="https://vkguide.dev/docs/gpudriven/gpu_driven_engines/#bindless-design">this guide</a> for Vulkan.</p>
 </doc-panel>
 <p>Most geometry in the world should be put through the bindless system as the resources will be required for ray-traced effects like <doc-anchor-trigger to="#global-illumination">Global Illumination</doc-anchor-trigger>. Unfortunately, some pipelines may want to draw their geometry in a custom way which the bindless system cannot account for. For this reason, shaders are split into 2 camps: Shader &amp; BindlessShader. As may be evident, Bindless Shaders are the only ones which contribute to the bindless buffers.</p>
-<p>Once all of the objects which will contribute to the bindless buffers have been collected, it is time to actually populate the buffers. There are 5 such buffers to fill, and each one contains an array of some structure.</p>
+<p>Once all of the objects which will contribute to the bindless buffers have been collected, it is time to actually populate the buffers. The five core scene buffers are described below. The implemented bind group also contains the texture array and sampler, object bounds, raytracing acceleration structures, raytracing scene configuration, BLAS pages, and clustered-lighting resources.</p>
 <div class="flex mb-6">
     <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
     <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
@@ -238,18 +238,21 @@ setup--&gt;gi &amp; depth_prepass--&gt;draw--&gt;post_processing--&gt;present</p
 <doc-panels expando>
    <doc-panel id="objects-buffer" collapsed>
        <template #title>Objects Buffer</template>
-<p>This one is the most simple to understand. Each entry defines the data for one object in the bindless scene. An object is a mesh with a material placed at some location, and so we have a <code translate="no" v-pre>transform</code> which is an affine transformation matrix, a <code translate="no" v-pre>meshIndex</code> which supplies an index into the <code translate="no" v-pre>meshSlices</code> buffer, and a <code translate="no" v-pre>materialIndex</code> which supplies an index into the <code translate="no" v-pre>materials</code> buffer.</p>
+<p>This one is the most simple to understand. Each entry defines the data for one object in the bindless scene. An object is a mesh with a material placed at some location. The implemented record contains its transform and inverse transform, indices into the mesh and material buffers, the root of its bottom-level acceleration structure, and a flags field reserved for future use.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">Definition</div>
 <pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">struct Object {
     transform: mat4x4&lt;f32&gt;,
-    meshIndex: u32,
-    materialIndex: u32,
+    inverse_transform: mat4x4&lt;f32&gt;,
+    mesh: u32,
+    material: u32,
+    blas_root: u32,
+    flags: u32,
 }
 
 var&lt;storage, read&gt; objects: array&lt;Object&gt;;</code></pre>
 </doc-codeblock></div>
-<p>So once you have an <code translate="no" v-pre>Object</code> you have everything you need to render it. Accessing the object you need is done by indexing the <code translate="no" v-pre>objects</code> buffer with <code translate="no" v-pre>instance_index</code> (supplied by the indirect draw function).</p>
+<p>World-space object bounds are stored separately for top-level BVH generation. Accessing the object needed for rasterization is done by indexing the <code translate="no" v-pre>objects</code> buffer with <code translate="no" v-pre>instance_index</code> supplied by the indirect draw function.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">Usage</div>
 <pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">@vertex
@@ -295,7 +298,9 @@ The real buffer also stores normals and colors, but those are hidden for demonst
     positions: vec2&lt;u32&gt;,
     normals: vec2&lt;u32&gt;,
     colors: vec2&lt;u32&gt;,
-    texcoords: vec2&lt;u32&gt;
+    texcoords: vec2&lt;u32&gt;,
+    indices: vec2&lt;u32&gt;,
+    blas: vec2&lt;u32&gt;,
 }
 
 var&lt;storage, read&gt; meshSlices: array&lt;MeshSlices&gt;;</code></pre>
@@ -309,7 +314,7 @@ texcoords = vec2(21u, 6u);</code></pre>
 </doc-codeblock></div>
 <p>Suppose I want to access the color of a vertex with index <code translate="no" v-pre>vertex_index</code>. Colors are stored with 4 components, so I access each vertex&#x27;s color by taking <code translate="no" v-pre>vertex_index</code> and multiplying it by the &quot;stride&quot; of the attribute I want to access.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
-<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">let slices = meshSlices[object.meshIndex]; // More on this in the &quot;Object Buffer&quot; part
+<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">let slices = meshSlices[object.mesh]; // More on this in the &quot;Object Buffer&quot; part
 let colorOffset = slices.colors.x + vertex_index * 4u; // 4u is the &quot;stride&quot; of a color (4 floats, rgba)
 let color = vec4(
     meshAttributes[offset]
@@ -335,27 +340,25 @@ let color = vec4(
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">Definition</div>
 <pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">struct Material {
-    diffuse_map: u32,
-    specular_map: u32,
-    roughness_map: u32,
-    normal_map: u32,
-    ao_map: u32,
+    diffuseColor: u32,
+    diffuseWeight: f32,
+    diffuseRoughness: f32,
 }
 
 var&lt;storage, read&gt; materials: array&lt;Material&gt;;</code></pre>
 </doc-codeblock></div>
-<p>We have a struct which defines an index for all of the textures used within a particular Object&#x27;s material. This struct will need to be expanded as more configurations are made available to the bindless pipeline. Access to the buffer is done using <code translate="no" v-pre>object.materialIndex</code>, just like how mesh data is accessed.</p>
+<p>The current material record represents one OpenPBR diffuse layer. <code translate="no" v-pre>diffuseColor</code> indexes the bindless texture array, while weight and roughness are scalar layer properties. Roughness is uploaded but is not yet consumed by the PBR fragment shader. Access to the buffer is done using <code translate="no" v-pre>object.material</code>, just like mesh data is accessed.</p>
 <div class="codeblock-wrapper"><doc-codeblock>
 <div class="codeblock-title">Usage</div>
 <pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">@vertex
 fn vert(@builtin(instance_index) instance_index: u32) -&gt; VertOutput {
     ...
     var object = objects[instance_index];
-    var material = materials[object.materialIndex];
+    var material = materials[object.material];
     ...
 }</code></pre>
 </doc-codeblock></div>
-<p>In a real implementation you would want to pass <code translate="no" v-pre>materialIndex</code> to the fragment shader.</p>
+<p>The vertex shader passes the material index to the fragment shader using flat interpolation.</p>
    </doc-panel>
    <doc-panel id="indirect_buffer" collapsed>
        <template #title>Indirect Buffer</template>
@@ -397,7 +400,60 @@ var draws: array&lt;IndirectIndexedDraw&gt;;</code></pre>
 <li>Add an indirect draw instruction to the <code translate="no" v-pre>indirect</code> buffer using the remembered <code translate="no" v-pre>index</code> buffer slice and the object index as the <code translate="no" v-pre>firstInstance</code>.</li>
 </ol>
 </blockquote>
-<p>So this is great for initializing the buffers, but it might be quite slow if we intend to have many thousands of objects in the scene (we do). An optimization is to only update parts of the buffers which have changed each frame. This dramatically reduces how much work needs to be done, but such an optimzation should not be so hastily applied to the indirect buffer. The draws defined in the indirect buffer happen sequentially, and for the purposes of seeing a consistent result, we should rebuild the buffer with the order of objects defined in the hierarchy of the stage we are rendering.</p>
+<p>The implementation updates changed resource slices and rebuilds the indirect buffer when the bindless scene is dirty. Active objects are compacted into contiguous GPU indices, and the indirect commands follow that compacted resource order. Objects sharing a shader and material configuration can be submitted with one multi-draw-indirect call; incompatible materials are drawn with individual indirect commands. The planned replacement for this simple ordering is described below.</p>
+<h2 id="visibility-and-draw-ordering">Visibility and draw ordering</h2>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-warning"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-warning" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
+                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>Frustum culling, material draw categories, and depth-sorted indirect commands are not yet implemented.</p>
+        </div>
+    </div>
+</div>
+<p>Not every object in the bindless scene needs to be drawn by every camera. Objects behind the camera or beyond its view should remain available to raytracing, but submitting raster draw commands for them would be a waste. Before building the draw list, we will query the camera&#x27;s frustum against the world-space bounds already stored for each object. The visible results are then divided into two categories:</p>
+<doc-panels expando>
+   <doc-panel id="opaque" collapsed>
+       <template #title>Opaque</template>
+<p>An opaque material either covers a sample or does not. Its alpha cutoff may be configured so every triangle sample passes, producing a solid surface, or so fragments below the cutoff are discarded, producing holes such as those needed for leaves and fences.</p>
+<p>Opaque objects test and write depth, and are drawn from front to back. Drawing the closest objects first fills the depth buffer early, allowing fragments hidden behind them to be rejected before expensive material shading is performed. The depth and color passes should execute the same alpha-cutoff test so they agree on which samples are covered.</p>
+   </doc-panel>
+   <doc-panel id="blended" collapsed>
+       <template #title>Blended</template>
+<p>A blended material may partially cover a pixel. It tests against the opaque depth buffer. Conventional alpha blending depends on previous color, so these objects are drawn from back to front after opaque geometry.</p>
+   </doc-panel>
+</doc-panels>
+<p>The distinction between opaque and blended must be stated explicitly by the material. A blend equation only describes how source and destination colors are combined and does not tell the renderer whether the material should write depth or enter a reverse ordered transparent pass.</p>
+<h3 id="frustum-culling">Frustum culling</h3>
+<p>Testing every object&#x27;s AABB against every camera works, but scales linearly with the size of the scene. Cinebara uses a <code translate="no" v-pre>LooseOctree</code> which can reduce the number of bounds tests dramatically. Each object is inserted according to the center and size of its world-space AABB. Larger objects stay near the top of the tree while smaller objects can be placed deeper within it.</p>
+<p>The &quot;loose&quot; part means that a node&#x27;s query bounds are expanded beyond its strict octant. An object can extend across the edge of its cell while still belonging to a single node, avoiding duplication across multiple branches.</p>
+<p>The octree supports a custom overlap function which maps neatly onto a frustum query:</p>
+<ol>
+<li>If a node&#x27;s loose bounds are outside any frustum plane, skip that node and all of its children.</li>
+<li>If the bounds are completely inside every plane, accept every object below the node without any more frustum tests.</li>
+<li>If the bounds overlap the frustum, test the objects held by the node and continue into its children.</li>
+</ol>
+<p>Objects whose transforms or deformations change are removed and reinserted when their world-space bounds change. If an object moves outside the octree&#x27;s root bounds, the tree must be rebuilt with a root large enough to contain the scene. This structure is only used to produce the raster visibility list: culling an object from one camera does not remove it from bindless storage or from the acceleration structures used for raytracing.</p>
+<h3 id="depth-sorting">Depth sorting</h3>
+<p>Sorting only the center of an object can give poor results for large bounds. Instead, project the center and extents of its AABB onto the camera&#x27;s forward axis to find its nearest and furthest depths.</p>
+<div id="depth-sorting-code-1" class="codeblock-wrapper"><doc-codeblock>
+<pre translate="no" class="language-kotlin"><code v-pre class="language-kotlin">centerDepth = dot(boundsCenter - cameraPosition, cameraForward)
+radius = dot(boundsExtents, abs(cameraForward))
+
+nearestDepth = centerDepth - radius
+furthestDepth = centerDepth + radius</code></pre>
+</doc-codeblock></div>
+<p>Opaque objects are sorted by <code translate="no" v-pre>nearestDepth</code> from lowest to highest. Blended objects are sorted by <code translate="no" v-pre>furthestDepth</code> from highest to lowest. When two values are equal, the object&#x27;s insertion order is used.</p>
+<p>Objects using compatible shaders and pipeline configurations are collected into indirect-draw groups. Each opaque group is ordered front to back, and each blended group is ordered back to front. Grouping means the ordering is not necessarily exact between incompatible pipelines, but avoids throwing away the reason bindless multi-draw exists in the first place.</p>
+<p>The depth pre-pass consumes the visible opaque objects in a globally front-to-back order, executes their alpha cutoff, and writes only their depth. The following opaque color pass disables depth writes, executes the same cutoff, and uses an <code translate="no" v-pre>Equal</code> depth comparison. Only the surface which produced the stored depth is allowed to run the expensive fragment shader, completely avoiding opaque shading overdraw regardless of how the later color pass is grouped. The pre-pass and color pass must use identical vertex positions, cutoff values, depth bias, clipping, and multisample state or their coverage and depth values may disagree.</p>
+<p>Object sorting cannot solve every transparency problem. Intersecting transparent objects can disagree about which one is in front across different pixels, and triangles within a single mesh are not reordered. Those cases will require meshes to be split or a future order-independent transparency technique. Such a technique is currently under discussion.</p>
 <hr>
 <h1 id="clustered-rendering">Clustered rendering</h1>
 <div class="flex mb-6">
@@ -412,7 +468,7 @@ var draws: array&lt;IndirectIndexedDraw&gt;;</code></pre>
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-<p>Clustered rendering is not yet implemented</p>
+<p>Clustered rendering is partially implemented. Light upload and the cluster compute infrastructure exist, but cascades are not initialized and the PBR shader currently evaluates only directional lights.</p>
         </div>
     </div>
 </div>
@@ -623,6 +679,23 @@ fn getClusterIndex(cascadeIndex: u32, position: vec3f) -&gt; u32 {
 <h1 id="pbr">PBR</h1>
 <p>We follow the <a href="https://academysoftwarefoundation.github.io/OpenPBR/">OpenPBR standard</a> with a few modifications. Let&#x27;s go over the primary structure that makes up the pbr workflow.</p>
 <p>A PBR material may have an arbitrary number of layers, each layer defines some special rendering technique and the layers may be blended to achieve emulation of micro-details, like fine scratches on metal providing additional specular highlights.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-warning"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-warning" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
+                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>The current bindless implementation supports one <code translate="no" v-pre>DiffuseSurface</code> containing a color texture, weight, and roughness. Raster shading uses the texture RGB, vertex RGB, and weight with a Lambertian diffuse BRDF; roughness is stored but not yet evaluated. The fragment shader currently ignores texture alpha and always outputs an alpha of <code translate="no" v-pre>1.0</code>.</p>
+        </div>
+    </div>
+</div>
+<p>Materials already expose depth writes and comparison, culling, stencil state, alpha-to-coverage, color write masks, and replace, mix, additive, or multiply blending through <code translate="no" v-pre>MaterialConfiguration</code>. These states create distinct cached render pipelines. The planned opaque and blended categories described in <doc-anchor-trigger to="#visibility-and-draw-ordering">Visibility and draw ordering</doc-anchor-trigger> are not yet implemented, and the PBR material has no opacity or alpha-cutoff model yet.</p>
 <hr>
 <h3 id="raytracing">Raytracing</h3>
 <h3 id="volumetrics">Volumetrics</h3>

@@ -4,7 +4,7 @@ The goal of Cinebara's renderer is to present a high quality image for film. Thi
 
 This document is going to be technical. For rendering features, skip to the [features section](#features).
 
-Cinbeara uses a forward clustered pipeline with bindless dispatch where possible. An outline of the pipeline flow is as follows:
+Cinebara uses a forward clustered pipeline with bindless dispatch where possible. An outline of the planned pipeline flow is as follows:
 
 <style>
     .dark\:bg-white {
@@ -76,7 +76,7 @@ It's a bit more involved than that, so if you are interested in how it works, ch
 
 Most geometry in the world should be put through the bindless system as the resources will be required for ray-traced effects like [Global Illumination](#global-illumination). Unfortunately, some pipelines may want to draw their geometry in a custom way which the bindless system cannot account for. For this reason, shaders are split into 2 camps: Shader & BindlessShader. As may be evident, Bindless Shaders are the only ones which contribute to the bindless buffers.
 
-Once all of the objects which will contribute to the bindless buffers have been collected, it is time to actually populate the buffers. There are 5 such buffers to fill, and each one contains an array of some structure. 
+Once all of the objects which will contribute to the bindless buffers have been collected, it is time to actually populate the buffers. The five core scene buffers are described below. The implemented bind group also contains the texture array and sampler, object bounds, raytracing acceleration structures, raytracing scene configuration, BLAS pages, and clustered-lighting resources.
 
 !!!
 You do not need to read about all of the buffers right now. You can refer back to them as they are mentioned throughout the page.
@@ -84,19 +84,22 @@ You do not need to read about all of the buffers right now. You can refer back t
 
 ==- Objects Buffer
 
-This one is the most simple to understand. Each entry defines the data for one object in the bindless scene. An object is a mesh with a material placed at some location, and so we have a `transform` which is an affine transformation matrix, a `meshIndex` which supplies an index into the `meshSlices` buffer, and a `materialIndex` which supplies an index into the `materials` buffer.
+This one is the most simple to understand. Each entry defines the data for one object in the bindless scene. An object is a mesh with a material placed at some location. The implemented record contains its transform and inverse transform, indices into the mesh and material buffers, the root of its bottom-level acceleration structure, and a flags field reserved for future use.
 
 ```wgsl Definition
 struct Object {
     transform: mat4x4<f32>,
-    meshIndex: u32,
-    materialIndex: u32,
+    inverse_transform: mat4x4<f32>,
+    mesh: u32,
+    material: u32,
+    blas_root: u32,
+    flags: u32,
 }
 
 var<storage, read> objects: array<Object>;
 ```
 
-So once you have an `Object` you have everything you need to render it. Accessing the object you need is done by indexing the `objects` buffer with `instance_index` (supplied by the indirect draw function).
+World-space object bounds are stored separately for top-level BVH generation. Accessing the object needed for rasterization is done by indexing the `objects` buffer with `instance_index` supplied by the indirect draw function.
 
 ```wgsl Usage
 @vertex
@@ -144,7 +147,9 @@ struct MeshSlices {
     positions: vec2<u32>,
     normals: vec2<u32>,
     colors: vec2<u32>,
-    texcoords: vec2<u32>
+    texcoords: vec2<u32>,
+    indices: vec2<u32>,
+    blas: vec2<u32>,
 }
 
 var<storage, read> meshSlices: array<MeshSlices>;
@@ -162,7 +167,7 @@ texcoords = vec2(21u, 6u);
 Suppose I want to access the color of a vertex with index `vertex_index`. Colors are stored with 4 components, so I access each vertex's color by taking `vertex_index` and multiplying it by the "stride" of the attribute I want to access.
 
 ```wgsl
-let slices = meshSlices[object.meshIndex]; // More on this in the "Object Buffer" part
+let slices = meshSlices[object.mesh]; // More on this in the "Object Buffer" part
 let colorOffset = slices.colors.x + vertex_index * 4u; // 4u is the "stride" of a color (4 floats, rgba)
 let color = vec4(
     meshAttributes[offset]
@@ -190,29 +195,27 @@ This is the most implementation specific buffer, and is not at all generalized. 
 
 ```wgsl Definition
 struct Material {
-    diffuse_map: u32,
-    specular_map: u32,
-    roughness_map: u32,
-    normal_map: u32,
-    ao_map: u32,
+    diffuseColor: u32,
+    diffuseWeight: f32,
+    diffuseRoughness: f32,
 }
 
 var<storage, read> materials: array<Material>;
 ```
 
-We have a struct which defines an index for all of the textures used within a particular Object's material. This struct will need to be expanded as more configurations are made available to the bindless pipeline. Access to the buffer is done using `object.materialIndex`, just like how mesh data is accessed.
+The current material record represents one OpenPBR diffuse layer. `diffuseColor` indexes the bindless texture array, while weight and roughness are scalar layer properties. Roughness is uploaded but is not yet consumed by the PBR fragment shader. Access to the buffer is done using `object.material`, just like mesh data is accessed.
 
 ```wgsl Usage
 @vertex
 fn vert(@builtin(instance_index) instance_index: u32) -> VertOutput {
     ...
     var object = objects[instance_index];
-    var material = materials[object.materialIndex];
+    var material = materials[object.material];
     ...
 }
 ```
 
-In a real implementation you would want to pass `materialIndex` to the fragment shader.
+The vertex shader passes the material index to the fragment shader using flat interpolation.
 
 ==- Indirect Buffer {#indirect_buffer}
 
@@ -257,14 +260,70 @@ With the buffers defined, populating them follows this process:
 > 5. Add each object to the `objects` buffer using the remembered indices from `meshSlices` and `materials` as well as the transform of the object. Also remember the index this was inserted at.
 > 6. Add an indirect draw instruction to the `indirect` buffer using the remembered `index` buffer slice and the object index as the `firstInstance`.    
 
-So this is great for initializing the buffers, but it might be quite slow if we intend to have many thousands of objects in the scene (we do). An optimization is to only update parts of the buffers which have changed each frame. This dramatically reduces how much work needs to be done, but such an optimzation should not be so hastily applied to the indirect buffer. The draws defined in the indirect buffer happen sequentially, and for the purposes of seeing a consistent result, we should rebuild the buffer with the order of objects defined in the hierarchy of the stage we are rendering.
+The implementation updates changed resource slices and rebuilds the indirect buffer when the bindless scene is dirty. Active objects are compacted into contiguous GPU indices, and the indirect commands follow that compacted resource order. Objects sharing a shader and material configuration can be submitted with one multi-draw-indirect call; incompatible materials are drawn with individual indirect commands. The planned replacement for this simple ordering is described below.
+
+## Visibility and draw ordering
+
+!!!warning
+Frustum culling, material draw categories, and depth-sorted indirect commands are not yet implemented.
+!!!
+
+Not every object in the bindless scene needs to be drawn by every camera. Objects behind the camera or beyond its view should remain available to raytracing, but submitting raster draw commands for them would be a waste. Before building the draw list, we will query the camera's frustum against the world-space bounds already stored for each object. The visible results are then divided into two categories:
+
+==- Opaque
+
+An opaque material either covers a sample or does not. Its alpha cutoff may be configured so every triangle sample passes, producing a solid surface, or so fragments below the cutoff are discarded, producing holes such as those needed for leaves and fences.
+
+Opaque objects test and write depth, and are drawn from front to back. Drawing the closest objects first fills the depth buffer early, allowing fragments hidden behind them to be rejected before expensive material shading is performed. The depth and color passes should execute the same alpha-cutoff test so they agree on which samples are covered.
+
+==- Blended
+
+A blended material may partially cover a pixel. It tests against the opaque depth buffer. Conventional alpha blending depends on previous color, so these objects are drawn from back to front after opaque geometry.
+
+==-
+
+The distinction between opaque and blended must be stated explicitly by the material. A blend equation only describes how source and destination colors are combined and does not tell the renderer whether the material should write depth or enter a reverse ordered transparent pass.
+
+### Frustum culling
+
+Testing every object's AABB against every camera works, but scales linearly with the size of the scene. Cinebara uses a `LooseOctree` which can reduce the number of bounds tests dramatically. Each object is inserted according to the center and size of its world-space AABB. Larger objects stay near the top of the tree while smaller objects can be placed deeper within it.
+
+The "loose" part means that a node's query bounds are expanded beyond its strict octant. An object can extend across the edge of its cell while still belonging to a single node, avoiding duplication across multiple branches.
+
+The octree supports a custom overlap function which maps neatly onto a frustum query:
+
+1. If a node's loose bounds are outside any frustum plane, skip that node and all of its children.
+2. If the bounds are completely inside every plane, accept every object below the node without any more frustum tests.
+3. If the bounds overlap the frustum, test the objects held by the node and continue into its children.
+
+Objects whose transforms or deformations change are removed and reinserted when their world-space bounds change. If an object moves outside the octree's root bounds, the tree must be rebuilt with a root large enough to contain the scene. This structure is only used to produce the raster visibility list: culling an object from one camera does not remove it from bindless storage or from the acceleration structures used for raytracing.
+
+### Depth sorting
+
+Sorting only the center of an object can give poor results for large bounds. Instead, project the center and extents of its AABB onto the camera's forward axis to find its nearest and furthest depths.
+
+```kotlin
+centerDepth = dot(boundsCenter - cameraPosition, cameraForward)
+radius = dot(boundsExtents, abs(cameraForward))
+
+nearestDepth = centerDepth - radius
+furthestDepth = centerDepth + radius
+```
+
+Opaque objects are sorted by `nearestDepth` from lowest to highest. Blended objects are sorted by `furthestDepth` from highest to lowest. When two values are equal, the object's insertion order is used.
+
+Objects using compatible shaders and pipeline configurations are collected into indirect-draw groups. Each opaque group is ordered front to back, and each blended group is ordered back to front. Grouping means the ordering is not necessarily exact between incompatible pipelines, but avoids throwing away the reason bindless multi-draw exists in the first place.
+
+The depth pre-pass consumes the visible opaque objects in a globally front-to-back order, executes their alpha cutoff, and writes only their depth. The following opaque color pass disables depth writes, executes the same cutoff, and uses an `Equal` depth comparison. Only the surface which produced the stored depth is allowed to run the expensive fragment shader, completely avoiding opaque shading overdraw regardless of how the later color pass is grouped. The pre-pass and color pass must use identical vertex positions, cutoff values, depth bias, clipping, and multisample state or their coverage and depth values may disagree.
+
+Object sorting cannot solve every transparency problem. Intersecting transparent objects can disagree about which one is in front across different pixels, and triangles within a single mesh are not reordered. Those cases will require meshes to be split or a future order-independent transparency technique. Such a technique is currently under discussion.
 
 ---
 
 # Clustered rendering
 
 !!!warning
-Clustered rendering is not yet implemented
+Clustered rendering is partially implemented. Light upload and the cluster compute infrastructure exist, but cascades are not initialized and the PBR shader currently evaluates only directional lights.
 !!!
 
 Forward rendering pipelines have a problem with large amounts of lights. Traditionally, all lights that may affect an object are passed in to the draw function for that object. This is problematic with large objects as many lights could be passed in, meaning that pixels which are nowhere near the light source still have to compute the result of that light. Not efficient.
@@ -453,6 +512,12 @@ An overview of the rendering features that are planned or available in Cinebara.
 We follow the [OpenPBR standard](https://academysoftwarefoundation.github.io/OpenPBR/) with a few modifications. Let's go over the primary structure that makes up the pbr workflow.
 
 A PBR material may have an arbitrary number of layers, each layer defines some special rendering technique and the layers may be blended to achieve emulation of micro-details, like fine scratches on metal providing additional specular highlights.
+
+!!!warning
+The current bindless implementation supports one `DiffuseSurface` containing a color texture, weight, and roughness. Raster shading uses the texture RGB, vertex RGB, and weight with a Lambertian diffuse BRDF; roughness is stored but not yet evaluated. The fragment shader currently ignores texture alpha and always outputs an alpha of `1.0`.
+!!!
+
+Materials already expose depth writes and comparison, culling, stencil state, alpha-to-coverage, color write masks, and replace, mix, additive, or multiply blending through `MaterialConfiguration`. These states create distinct cached render pipelines. The planned opaque and blended categories described in [Visibility and draw ordering](#visibility-and-draw-ordering) are not yet implemented, and the PBR material has no opacity or alpha-cutoff model yet.
 
 ---
 

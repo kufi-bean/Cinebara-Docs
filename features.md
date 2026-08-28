@@ -104,4 +104,6 @@ Link a file from the engine to one on the disc for realtime feedback of your cha
 
 ## :icon-cinebara-question:  Limb simulation decoupling
 
+## :icon-cinebara-question:  Pivot caching vertex displacement
+
 Limbs could be simulated separately from the IK driven body to allow for more autonomous performances. Legs in 0G, a tail twitching or reacting to touch.

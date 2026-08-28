@@ -45,5 +45,6 @@ Processing happens in this order:
 
 [!card layout="signal"](/nodes/camera/)
 [!card layout="signal"](/nodes/label/)
+[!card layout="signal"](/nodes/sky/)
 [!card layout="signal"](/nodes/transform_3d/)
 [!card layout="signal"](/nodes/viewport/)
