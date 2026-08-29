@@ -28,7 +28,7 @@ A fully language agnostic UI layout system that supports 3D offsets, flex, grids
 
 Read more on [the UI page](ui/ui.md).
 
-## :icon-cinebara-question:  In-world editing
+## :icon-cinebara-develop:  In-world editing
 
 Build [Stages](stages.md) completely within Cinebara either in a Desktop or VR interface. 
 
@@ -38,13 +38,13 @@ Connect to other Users and work on one [Stage](stages.md) at the same time.
 
 ## :icon-cinebara-develop: Physics simulation
 
-## :icon-cinebara-question:  Mesh skinning
+## :icon-cinebara-develop:  Mesh skinning
 
 Deforming an otherwise static mesh with an armature which allows for more complex characters with squishy limbs.
 
 ## :icon-cinebara-question:  Importing characters
 
-Bringing a "character" in from a format like `fbx`, `gltf`, or whatever we can find a library for. This process involves reading a mesh and skinning it with a provided armature, applying some procedural animation (like IK) to it, and providing the ability to "take control" of it.
+Assimp can import skinned meshes and skeleton data, but IK, procedural character animation, and taking control of a character are not implemented.
 
 ## :icon-cinebara-question:  Secondary motion
 
@@ -72,9 +72,9 @@ Procedural effects on pre-recorded performances, such as smoothing out jitter, r
 
 ## :icon-cinebara-question:  Custom Shaders
 
-## :icon-cinebara-question:  Raytracing
+## :icon-cinebara-develop:  Raytracing
 
-## :icon-cinebara-question:  Asset streaming
+## :icon-cinebara-develop:  Asset streaming
 
 ## :icon-cinebara-question:  World Streaming
 
