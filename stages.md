@@ -4,7 +4,11 @@ description: An environment to build or perform on.
 
 # Stages
 
-A Stage holds the content of a [Session](sessions.md) and is also the thing you conceptually save (when closing a session) and load (when starting a session). Stages can be edited and performed on entirely within Cinebara.
+A Stage holds the content of a [Session](sessions.md). In the mature workflow, it is the unit that users save when closing a Session, load when starting one, edit, and perform entirely within Cinebara.
+
+!!!warning
+The `Stage` container and its root node exist in the current state of the engine. Complete stage persistence and full in-world editing do not. The current serializer writes a tree to data in one direction. It is not yet a complete save and load system.
+!!!
 
 A Stage always has at least one [Node](nodes.md) in it which serves as the root of the Stage's [tree](nodes.md#trees).
 

@@ -4,12 +4,14 @@ description: "A container for a Stage to be performed on or edited by networked 
 
 # Sessions
 
+!!!warning
+The Session abstraction and its lifetime, master, replication, and election model are planned and not implemented. The current state of the engine keeps the main and UI stages on the `Cinebara` singleton and stores Ghosts on `Stage`.
+!!!
+
 A session holds a loaded instance of a [Stage](stages.md) and may be networked. Fundamentally, a session exists to provide access to a Stage.
 
 A session can contain many trees that serve different purposes. 
 One specific tree that the session holds is the Stage, which is the primary tree you interact with.
-
-Any node created for a session is remembered so that when the session closes, all of its resources can be cleaned up. This means that if a node ever falls into Limbo, it is still remembered by the session.
 
 !!!warning 
 Networking is not yet implemented
