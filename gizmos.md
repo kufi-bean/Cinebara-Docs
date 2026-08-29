@@ -30,25 +30,30 @@ Does selecting a Node show the bounds of all of the children? What about a share
 Selection is not fully implemented.
 !!!
 
-Clicking on a Node wth a "surface" will select it. If there are multiple Nodes intersecting the ray you clicked, clicking again will progressively increment through the intersected Nodes. Clicking and dragging will select all Nodes that intersect the drawn box that are also deemed "visible". This visibility check can be disabled. In VR, the visibility check is not done as you are drawing a 3D box and so such a concept doesn't mean anything.
+Clicking sends a linecast from the active camera into the Stage. The linecast tests queryable nodes (currently only MeshRenderer). When it intersects more than one eligible node, the closest intersection becomes the selected target.
 
-Holding [Shift] and clicking an unselected Node will expand your selection to contain the new Node. If you clicked a Node which was already selected, it will remove the Node from your selection instead. The same [Shift] modification can be applied to the box selection, but it will always expand your selection. Holding [Ctrl] + [Shift] will deselect.
+A normal click replaces the existing selection with that target. A normal click that does not hit eligible geometry clears the existing selection. Holding either [Shift] or [Ctrl] changes the click into a toggle. Clicking an unselected target adds it to the selection, while clicking a selected target removes it. Holding [Shift] or [Ctrl] while clicking empty space leaves the selection unchanged.
+
+### Intended selection workflow
+
+The selection tools are intended to support cycling through overlapping targets, drag or box selection, and optional visibility filtering for box selection. VR selection is intended to use a three-dimensional selection box, where screen-space visibility does not apply. These behaviors are not implemented. There is also no distinct Ctrl+Shift deselection mode yet.
 
 ## Translate
 
-!!!warning
-Translation is not yet implemented.
+Allows translating selected `Transform3DNode` targets. If a selected node has no transform of its own, the gizmo can instead translate its transform ancestor.
+
+The gizmo shows 3 interactable axes to drag, but you may also move objects relative to the viewplane by pressing `G`. Pressing `G` and then an axis (X, Y, or Z keys) will constrain translation to that axis. Holding shift when pressing an axis will constrain the transformation to the other 2 axis, allowing you to slide the node on a plane instead.
+
+The axis point along world +X, +Y, and +Z by default but local coordinates may also be used.
+
+!!!warning  Not implemented
+The final editing workflow is intended to add snapping to grids, vertices, edges, and faces, together with alignment, mirror or symmetry tools, and surface orientation.
 !!!
 
-!!!
-Alignment tools & mirror / symmetry tools
-!!!
+## Rotate
 
-!!! Snapping
-Grid
-Vertex
-Edge
-Face / Surface
+Allows rotating selected `Transform3DNode` targets. If a selected node has no transform of its own, the gizmo can instead rotate its an ancestor.
 
-Orient to surface
-!!!
+The gizmo shows 3 interactable rings to grab and drag, but you may also rotate nodes relative to the viewplane by pressing `R`. Pressing `R` and then an axis (X, Y, or Z keys) will constrain rotation to that axis.
+
+The rings are oriented to face world +X, +Y, and +Z by default but local coordinates may also be used.
