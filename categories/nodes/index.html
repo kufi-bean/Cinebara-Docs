@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.841200614352">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.841297082600">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -31,11 +31,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=4.6.0.841200614352" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=4.6.0.841297082600" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=4.6.0.841297082600" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=4.6.0.841297082600" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -143,7 +143,7 @@
         <div class="p-card-padding">
             <div class="text-card-kicker font-card-kicker text-card-kicker-text card-kicker-case">nodes</div>
             <div class="mt-2 text-card-title font-card-title leading-card-title text-card-title-text md:text-card-title-md">Label</div>
-            <div class="line-clamp-5"><p class="mt-card-description-margin-top text-card-description-text">Provides a name for a specific branch of a tree. It is useful for organization.</p></div>
+            <div class="line-clamp-5"><p class="mt-card-description-margin-top text-card-description-text">Provides a name for a specific branch of a tree. It is useful for organization. Lookup of nodes by label or name is not currently implemented.</p></div>
         </div>
     </a>
 </div>
@@ -152,7 +152,7 @@
         <div class="p-card-padding">
             <div class="text-card-kicker font-card-kicker text-card-kicker-text card-kicker-case">nodes</div>
             <div class="mt-2 text-card-title font-card-title leading-card-title text-card-title-text md:text-card-title-md">Sky</div>
-            <div class="line-clamp-5"><p class="mt-card-description-margin-top text-card-description-text">When in a stage, sets the environment texture for the stage. An environment texture is used in raster rendering for default ambient irradiance as well as in raytracing when a ray hits no geometry. An irradiance cubemap is computed any time the environment texture is updated. Updating the environment texture is expensive as a full irradiance convolution has to run to calculate the irradiance cubemap.</p></div>
+            <div class="line-clamp-5"><p class="mt-card-description-margin-top text-card-description-text">Sets the environment texture for the stage the node belongs to. In raster rendering, the provided environment texture is used for specular environment reflections as well as ambient irradiance. In raytraced rendering, the environment texture is used for sampling radiance from the sky when a ray misses all geometry.</p></div>
         </div>
     </a>
 </div>

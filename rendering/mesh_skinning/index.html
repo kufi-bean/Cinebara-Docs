@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.841200614352">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.841297082600">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -12,7 +12,7 @@
     <!-- Primary Meta Tags -->
     <title>Mesh Skinning</title>
     <meta name="title" content="Mesh Skinning">
-    <meta name="description" content="Since Cinebara is a hybrid raster / raytraced engine, all skinned models need to be available simultaniously in the bindless pipeline. In order to achieve this, skinned models have some duplicated buffers for each instance in the world.">
+    <meta name="description" content="Because Cinebara combines raster rendering with raytracing, a deformed mesh needs geometry that both systems can read. The intended design gives every deformable mesh instance its own deformed position, normal, and optional tangent buffers.">
 
     <!-- Canonical -->
     <link rel="canonical" href="https://docs.cinebara.com/rendering/mesh_skinning/">
@@ -22,7 +22,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://docs.cinebara.com/rendering/mesh_skinning/">
     <meta property="og:title" content="Mesh Skinning">
-    <meta property="og:description" content="Since Cinebara is a hybrid raster / raytraced engine, all skinned models need to be available simultaniously in the bindless pipeline. In order to achieve this, skinned models have some duplicated buffers for each instance in the world.">
+    <meta property="og:description" content="Because Cinebara combines raster rendering with raytracing, a deformed mesh needs geometry that both systems can read. The intended design gives every deformable mesh instance its own deformed position, normal, and optional tangent buffers.">
     <meta property="og:site_name" content="Cinebara">
     <meta property="og:locale" content="en_US">
 
@@ -30,18 +30,18 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://docs.cinebara.com/rendering/mesh_skinning/">
     <meta name="twitter:title" content="Mesh Skinning">
-    <meta name="twitter:description" content="Since Cinebara is a hybrid raster / raytraced engine, all skinned models need to be available simultaniously in the bindless pipeline. In order to achieve this, skinned models have some duplicated buffers for each instance in the world.">
+    <meta name="twitter:description" content="Because Cinebara combines raster rendering with raytracing, a deformed mesh needs geometry that both systems can read. The intended design gives every deformable mesh instance its own deformed position, normal, and optional tangent buffers.">
 
     <!-- Alternate Markdown -->
     <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/rendering/mesh_skinning.md">
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=4.6.0.841200614352" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=4.6.0.841297082600" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=4.6.0.841297082600" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=4.6.0.841297082600" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -134,14 +134,28 @@
 
                 <!-- Page content  -->
 <h1 id="mesh-skinning">Mesh Skinning</h1>
-<p>Since Cinebara is a hybrid raster / raytraced engine, all skinned models need to be available simultaniously in the bindless pipeline. In order to achieve this, skinned models have some duplicated buffers for each instance in the world. Specifically, vertex positions and normals. Skinning of a mesh follows three transformations: Bone transforms, blendshapes, and procedural effects. This page will cover all three.</p>
-<p>All processes happen in a compute dispatch simultaneously for all skinned meshes in the scene.</p>
+<p>Because Cinebara combines raster rendering with raytracing, a deformed mesh needs geometry that both systems can read. The intended design gives every deformable mesh instance its own deformed position, normal, and optional tangent buffers. A mesh can then pass through ordered, cacheable deformation stages such as bone skinning, blendshapes, and procedural effects.</p>
 <h1 id="blendshapes">Blendshapes</h1>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-warning"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-warning" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
+                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>Blendshapes and morph targets are part of the intended deformation pipeline. They are not implemented in the current state of the engine.</p>
+        </div>
+    </div>
+</div>
 <p>Also referred to as &quot;Shape Keys&quot; or &quot;Morph Targets&quot;, blendshapes are a big list of per-vertex offsets that can be linearly applied to a mesh to control the surface, allowing the mouth to move for making visemes,  customize the source mesh in an artistic way, or correct for distortions introduced during bone transformation.</p>
 <p>Blendshapes are stored alongside the mesh in 3 buffers: One for vertex indices, one for position and normal offsets, and finally one which describes the slices of the index buffer to use for each blendshape. The weights for an instance of the mesh would be supplied in the object group, like the model matrix.</p>
 <h1 id="bone-transforms">Bone transforms</h1>
 <p>Each vertex index in a mesh is associated to a list of bone indices and weights. Since we&#x27;re aiming for film quality, the typical 4 bone per-vertex limit is not fit. Instead, a flexible structure is used where each vertex is given a slice into 2 buffers, one for bone indices and one for bone weights. This feels similar to how Bindless describes meshes with slices into a large global buffer. Not only does this approach allow for an unbounded number of weights per-vertex, but also compresses data when vertices have few weights.</p>
-<p>The bone buffers are supplied alongside a mesh and packed into the global bindless buffer the same way that any other mesh data would be. For non-bindless pipelines, the data is supplied in two distinct buffers, just like positions and normals.</p>
 <p>The list of bone transforms that compose a Skeleton are then also supplied, a packed list of 4x4 matrices describing object-space transforms. This means that moving a Node that is a parent of a skinned mesh does not require re-computing all of the bone matrices.</p>
 <p>Only positions, normals, and tangents are transformed by this process, meaning two skinned mesh instances that use the same mesh will share their colors, texture coordinates, and anything else that is not dependant on transformation. Unfortunately, this does mean that memory usage is not as optimal as in traditional vertex program based processes, but since it allows for raytracing, the tradeoff is required.</p>
 <h1 id="procedural-effects">Procedural Effects</h1>

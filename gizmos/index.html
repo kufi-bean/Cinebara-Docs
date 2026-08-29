@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.841200614352">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.841297082600">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,11 +37,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.841200614352" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.841297082600" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.841297082600" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.841200614352" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.841297082600" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -209,9 +209,14 @@ If not, what are they?</p>
         </div>
     </div>
 </div>
-<p>Clicking on a Node wth a &quot;surface&quot; will select it. If there are multiple Nodes intersecting the ray you clicked, clicking again will progressively increment through the intersected Nodes. Clicking and dragging will select all Nodes that intersect the drawn box that are also deemed &quot;visible&quot;. This visibility check can be disabled. In VR, the visibility check is not done as you are drawing a 3D box and so such a concept doesn&#x27;t mean anything.</p>
-<p>Holding [Shift] and clicking an unselected Node will expand your selection to contain the new Node. If you clicked a Node which was already selected, it will remove the Node from your selection instead. The same [Shift] modification can be applied to the box selection, but it will always expand your selection. Holding [Ctrl] + [Shift] will deselect.</p>
+<p>Clicking sends a linecast from the active camera into the Stage. The linecast tests queryable nodes (currently only MeshRenderer). When it intersects more than one eligible node, the closest intersection becomes the selected target.</p>
+<p>A normal click replaces the existing selection with that target. A normal click that does not hit eligible geometry clears the existing selection. Holding either [Shift] or [Ctrl] changes the click into a toggle. Clicking an unselected target adds it to the selection, while clicking a selected target removes it. Holding [Shift] or [Ctrl] while clicking empty space leaves the selection unchanged.</p>
+<h3 id="intended-selection-workflow">Intended selection workflow</h3>
+<p>The selection tools are intended to support cycling through overlapping targets, drag or box selection, and optional visibility filtering for box selection. VR selection is intended to use a three-dimensional selection box, where screen-space visibility does not apply. These behaviors are not implemented. There is also no distinct Ctrl+Shift deselection mode yet.</p>
 <h2 id="translate">Translate</h2>
+<p>Allows translating selected <code translate="no" v-pre>Transform3DNode</code> targets. If a selected node has no transform of its own, the gizmo can instead translate its transform ancestor.</p>
+<p>The gizmo shows 3 interactable axes to drag, but you may also move objects relative to the viewplane by pressing <code translate="no" v-pre>G</code>. Pressing <code translate="no" v-pre>G</code> and then an axis (X, Y, or Z keys) will constrain translation to that axis. Holding shift when pressing an axis will constrain the transformation to the other 2 axis, allowing you to slide the node on a plane instead.</p>
+<p>The axis point along world +X, +Y, and +Z by default but local coordinates may also be used.</p>
 <div class="flex mb-6">
     <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-warning"></div>
     <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
@@ -224,49 +229,15 @@ If not, what are they?</p>
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-<p>Translation is not yet implemented.</p>
+            <h5>Not implemented</h5>
+<p>The final editing workflow is intended to add snapping to grids, vertices, edges, and faces, together with alignment, mirror or symmetry tools, and surface orientation.</p>
         </div>
     </div>
 </div>
-<div class="flex mb-6">
-    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
-    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
-        <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
-                <g fill="currentColor"><g>
-                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
-                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
-                    <path fill="none" d="M0 0h24v24H0z"></path>
-                </g></g>
-            </svg>
-        </div>
-        <div class="pr-5 ml-3 w-full">
-<p>Alignment tools &amp; mirror / symmetry tools</p>
-        </div>
-    </div>
-</div>
-<div class="flex mb-6">
-    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
-    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
-        <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
-                <g fill="currentColor"><g>
-                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
-                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
-                    <path fill="none" d="M0 0h24v24H0z"></path>
-                </g></g>
-            </svg>
-        </div>
-        <div class="pr-5 ml-3 w-full">
-            <h5>Snapping</h5>
-<p>Grid
-Vertex
-Edge
-Face / Surface</p>
-<p>Orient to surface</p>
-        </div>
-    </div>
-</div>
+<h2 id="rotate">Rotate</h2>
+<p>Allows rotating selected <code translate="no" v-pre>Transform3DNode</code> targets. If a selected node has no transform of its own, the gizmo can instead rotate its an ancestor.</p>
+<p>The gizmo shows 3 interactable rings to grab and drag, but you may also rotate nodes relative to the viewplane by pressing <code translate="no" v-pre>R</code>. Pressing <code translate="no" v-pre>R</code> and then an axis (X, Y, or Z keys) will constrain rotation to that axis.</p>
+<p>The rings are oriented to face world +X, +Y, and +Z by default but local coordinates may also be used.</p>
 
                 
                 <!-- Required only on API pages -->

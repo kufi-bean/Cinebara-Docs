@@ -5,7 +5,7 @@
 - [Nodes](https://docs.cinebara.com/nodes/nodes.md): The building block of a Stage, Nodes provide structure and behaviour and are oganized in a tree.
 - [Welcome](https://docs.cinebara.com/readme.md): Welcome
 - [Rendering](https://docs.cinebara.com/rendering/rendering.md): Describes the general process for rendering the Cinebara window.
-- [Entities](https://docs.cinebara.com/entities.md): An entity is some separate tree that does not exist in a Stage's tree but is referenced by some node within the Stage's tree. The node that sits in the
+- [Entities](https://docs.cinebara.com/entities.md): The entity system described on this page is planned and not implemented. There are currently no Entity or EntityInstance types.
 - [Features](https://docs.cinebara.com/features.md): A list of features that are either planned or implemented.
 - [Gizmos](https://docs.cinebara.com/gizmos.md): A gizmo is an interactable overlay used while editing a Stage. There are many types and they serve as a more convenient way to edit node properties.
 - [Input](https://docs.cinebara.com/input.md): Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like "move forward").
@@ -18,13 +18,13 @@
 ## Nodes
 
 - [Camera](https://docs.cinebara.com/nodes/camera.md): Defines a view into a stage. As it stands, a camera supports either Orthographic of Perspective projections but other projections will likely be added with time.
-- [Label](https://docs.cinebara.com/nodes/label.md): Provides a name for a specific branch of a tree. It is useful for organization.
+- [Label](https://docs.cinebara.com/nodes/label.md): Provides a name for a specific branch of a tree. It is useful for organization. Lookup of nodes by label or name is not currently implemented.
 - [Sky](https://docs.cinebara.com/nodes/sky.md): Provides an environment texture for the stage.
 - [Transform 3D (Node)](https://docs.cinebara.com/nodes/transform_3d.md): Provides a 3D transformation to all Nodes under it.
 - [Viewport (Node)](https://docs.cinebara.com/nodes/viewport.md): A list of render targets and cameras which should be used to render into those targets.
 
 ## Rendering
 
-- [Mesh Skinning](https://docs.cinebara.com/rendering/mesh_skinning.md): Since Cinebara is a hybrid raster / raytraced engine, all skinned models need to be available simultaniously in the bindless pipeline. In order to achieve this, skinned models have some duplicated buffers for each instance in the world.
+- [Mesh Skinning](https://docs.cinebara.com/rendering/mesh_skinning.md): Because Cinebara combines raster rendering with raytracing, a deformed mesh needs geometry that both systems can read. The intended design gives every deformable mesh instance its own deformed position, normal, and optional tangent buffers.
 - [Raytracing](https://docs.cinebara.com/rendering/raytracing.md): Cinebara uses a raster rendering pipeline complemented by raytracing capabilities. This document gives a brief overview of the current architecture.
 - [Render Functions](https://docs.cinebara.com/rendering/render_functions.md): A Render Function handles the rendering for one kind of shader. Mesh Renderers automaticallly register themselves to the Render Scene using the Render Function of the supplied shader.
