@@ -10,38 +10,38 @@
     <meta name="generator" content="Retype 4.6.0">
 
     <!-- Primary Meta Tags -->
-    <title>Input</title>
-    <meta name="title" content="Input">
-    <meta name="description" content="Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like \"move forward\").">
+    <title>Networking</title>
+    <meta name="title" content="Networking">
+    <meta name="description" content="The structure of a networked stage hierarchy is implicitly replicated between peers. Properties on Nodes within the hierarchy are implcitly replicated during editing but explicitly replicated during play mode.">
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://docs.cinebara.com/input/">
+    <link rel="canonical" href="https://docs.cinebara.com/nodes/networking/">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://docs.cinebara.com/sitemap.xml">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.cinebara.com/input/">
-    <meta property="og:title" content="Input">
-    <meta property="og:description" content="Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like \"move forward\").">
+    <meta property="og:url" content="https://docs.cinebara.com/nodes/networking/">
+    <meta property="og:title" content="Networking">
+    <meta property="og:description" content="The structure of a networked stage hierarchy is implicitly replicated between peers. Properties on Nodes within the hierarchy are implcitly replicated during editing but explicitly replicated during play mode.">
     <meta property="og:site_name" content="Cinebara">
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://docs.cinebara.com/input/">
-    <meta name="twitter:title" content="Input">
-    <meta name="twitter:description" content="Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like \"move forward\").">
+    <meta name="twitter:url" content="https://docs.cinebara.com/nodes/networking/">
+    <meta name="twitter:title" content="Networking">
+    <meta name="twitter:description" content="The structure of a networked stage hierarchy is implicitly replicated between peers. Properties on Nodes within the hierarchy are implcitly replicated during editing but explicitly replicated during play mode.">
 
     <!-- Alternate Markdown -->
-    <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/input.md">
+    <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/nodes/networking/networking.md">
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.844531496281" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=4.6.0.844531496281" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.844531496281" data-turbo-eval="false" defer></script>
-    <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.844531496281" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=4.6.0.844531496281" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=4.6.0.844531496281" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -133,49 +133,38 @@
                 <doc-page-actions></doc-page-actions>
 
                 <!-- Page content  -->
-<h1 id="input">Input</h1>
-<p>Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like &quot;move forward&quot;).</p>
-<p>At the start of a tick, raw inputs are turned into actions. Each <code translate="no" v-pre>Action</code> has one logical <code translate="no" v-pre>ActionSource</code>, while it may retain several contributing raw input keys or events internally. The actions are processed through the session following the process order defined above. Nodes can then listen for a certain Action and read it before optionally consuming it (implying other nodes should not use it again).</p>
-<h1 id="ownership">Ownership</h1>
-<div class="flex mb-6">
-    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-warning"></div>
-    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
-        <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-warning" width="22" height="22" viewBox="0 0 24 24" role="presentation">
-                <g fill="currentColor"><g>
-                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
-                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
-                </g></g>
-            </svg>
-        </div>
-        <div class="pr-5 ml-3 w-full">
-<p>Action ownership is not yet implemented</p>
-        </div>
-    </div>
-</div>
-<p>Some nodes may intend to use inputs from a specific user while ignoring inputs from other users. For this, Actions have an owner which can be used as a filter by Nodes.</p>
-<h2 id="input-sources">Input sources</h2>
-<p>The same action may be provided by different sources. Think of a laser in VR and a mouse cursor both sending out &quot;click&quot; events. Different sources may be owned by the same device, like the left hand laser and the right hand laser.</p>
-<p>These sources are provided to actions in the form of a list. The list is composed of all sources that contributed to the generation of an action.</p>
-<h2 id="action-consumption">Action consumption</h2>
-<p>Consuming an action marks all of the used inputs as being used and no further actions should be accessible that also use those actions. Some raw inputs may want to be used by multiple actions in the same tick, such as holding a modifier key like ctrl to alter the behaviour of movement keys.</p>
-<div class="flex mb-6">
-    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-question"></div>
-    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
-        <div class="flex items-center ml-4 h-7">
-            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-question" width="22" height="22" viewBox="0 0 24 24" role="presentation">
-                <g fill="currentColor"><g>
-                    <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11ZM22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11Z"></path>
-                    <path d="M8.89368 5.54722C9.70794 5.06874 10.665 4.8935 11.5958 5.05308C12.5267 5.21276 13.3713 5.6968 13.9796 6.41929C14.5877 7.14169 14.9212 8.0561 14.92 9.00035L14.9074 9.28062C14.7798 10.6552 13.7345 11.5758 12.9747 12.0824C12.5393 12.3727 12.1107 12.5857 11.795 12.7259C11.6358 12.7967 11.5011 12.8503 11.4044 12.8871C11.3561 12.9055 11.3167 12.9199 11.2882 12.93C11.2741 12.9351 11.2628 12.9397 11.254 12.9427C11.2498 12.9442 11.2462 12.9457 11.2433 12.9466C11.242 12.9471 11.2404 12.9473 11.2394 12.9476L11.2374 12.9486H11.2365L11.1378 12.9759C10.6432 13.087 10.1346 12.8071 9.97083 12.3158C9.79672 11.7926 10.0791 11.2264 10.6017 11.0511V11.0521L10.6036 11.0511C10.6063 11.0502 10.6113 11.0487 10.6183 11.0462C10.6336 11.0408 10.6591 11.0316 10.6925 11.0189C10.7599 10.9932 10.8606 10.953 10.9825 10.8988C11.2293 10.7891 11.551 10.6279 11.8654 10.4183C12.5548 9.95872 12.9198 9.46936 12.92 9.00035V8.9984L12.9122 8.82261C12.8768 8.41362 12.7165 8.02363 12.4503 7.70738C12.1461 7.34604 11.7235 7.10364 11.2579 7.02379C10.7925 6.944 10.3135 7.03158 9.90638 7.27086C9.49929 7.51011 9.1901 7.88601 9.03333 8.3314L8.99427 8.42613C8.7787 8.88497 8.24645 9.11555 7.75794 8.94371C7.23704 8.76045 6.96349 8.18924 7.14661 7.66832L7.20911 7.5023C7.53839 6.68391 8.1303 5.99587 8.89368 5.54722Z"></path>
-                    <path d="M11.0098 15L11.1123 15.0049C11.6165 15.0561 12.0098 15.4822 12.0098 16C12.0098 16.5178 11.6165 16.9439 11.1123 16.9951L11.0098 17H11C10.4477 17 10 16.5523 10 16C10 15.4477 10.4477 15 11 15H11.0098Z"></path>
-                </g></g>
-            </svg>
-        </div>
-        <div class="pr-5 ml-3 w-full">
-<p>How do we differentiate between actions that can be shared and those that can not?</p>
-        </div>
-    </div>
-</div>
+<h1 id="networking">Networking</h1>
+<p>The structure of a networked stage hierarchy is implicitly replicated between peers. Properties on Nodes within the
+hierarchy are implcitly replicated during editing but explicitly replicated during play mode. They must be intentionally
+set up for networking or be backed by networked.</p>
+<p>When replicating data, one user acts as an authority for the NetworkID. They do NOT own the data, they just help agree
+upon a unique ID.</p>
+<h2 id="the-master">The master</h2>
+<p>The master relays all reliable packets to all other users. They also decide on newly connecting users IDs.</p>
+<h2 id="networkids">NetworkIDs</h2>
+<p>Anything that must be uniquely identified over the network uses a NetworkId, a polymorphic identifier type. An id may refer to a Node or a ValueInterface, both of which are owned by a stage in some way.</p>
+<p>A Network Id may then be used to find properties, since properties live directly on Nodes or ValueInterfaces. Identifying a property is done using the NetworkId of the thing holding the property followed by the property&#x27;s string identifier.</p>
+<p>NetworkIDs are the preferred way of referencing a Node, but it is not the only way. When a user first creates a Node,
+and it is replicated to the master, the node lacks an agreed upon NetworkID. For this reason it is given a temporary ID
+that is composed of the User&#x27;s ID and a NetworkID as decided by the author of the Node. This is more data but avoids
+collisions when multiple users associate the same ID to different Nodes without knowing.</p>
+<p>Both IDs are associated to any node created locally or that was replicated to the master.</p>
+<p>Sending ordered data to peers for a newly created object follows this protocol:
+There are 3 connected peers; Alice, Bob, and Marc who is also the &quot;master&quot;</p>
+<ol>
+<li>Alice creates Banana and associates a temporary ID &quot;AliceBanana&quot;.</li>
+<li>Alice tells Marc about Banana.</li>
+<li>Marc associates a new, more compact, known-to-be-unique ID &quot;Banan&quot;.</li>
+<li>Marc tells Alice about the new id.</li>
+<li>Marc tells Bob about the creation event, already associating it only with the new NetworkId.</li>
+<li>All peers now exchange changes to Banana using the compact &quot;Banan&quot; id.</li>
+</ol>
+<p><strong>Considerations</strong></p>
+<blockquote>
+<p><strong>Conflicting changes</strong></p>
+<p>The master chooses the most recent change based on latency adjusted ticks and informs the resolved value to the peer
+who had lost the conflict battle.</p>
+</blockquote>
 
                 
                 <!-- Required only on API pages -->
@@ -185,20 +174,20 @@
             
                 <nav id="retype-nextprev" class="print:hidden flex mt-14">
                     <div class="w-1/2">
-                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../gizmos/">
+                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../../nodes/label/">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                             <span>
                                 <span class="block text-xs font-normal text-base-text-muted">Previous</span>
-                                <span class="block mt-1">Gizmos</span>
+                                <span class="block mt-1">Label</span>
                             </span>
                         </a>
                     </div>
             
                     <div class="w-1/2">
-                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../interface/">
+                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../../nodes/sky/">
                             <span>
                                 <span class="block text-xs font-normal text-right text-base-text-muted">Next</span>
-                                <span class="block mt-1">Interface</span>
+                                <span class="block mt-1">Sky</span>
                             </span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                         </a>
@@ -242,6 +231,6 @@
 
     <div id="retype-overlay-target"></div>
 
-        <script data-cfasync="false">window.__DOCS__ = { "title": "Input", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/input.md" }</script>
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Networking", level: 2, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/nodes/networking/networking.md" }</script>
 </body>
 </html>

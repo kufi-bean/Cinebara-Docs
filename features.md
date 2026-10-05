@@ -28,7 +28,7 @@ Read more on [the UI page](ui/ui.md).
 
 Build [Stages](stages.md) completely within Cinebara either in a Desktop or VR interface. 
 
-## :icon-cinebara-question:  Collaborative editing
+## :icon-cinebara-develop:  Collaborative editing
 
 Connect to other Users and work on one [Stage](stages.md) at the same time.
 
@@ -46,11 +46,11 @@ Assimp can import skinned meshes and skeleton data, but IK, procedural character
 
 ## :icon-cinebara-question:  Ragdolls
 
-## :icon-cinebara-question:  Squishy surfaces
+## :icon-cinebara-develop:  Squishy surfaces
 
 ## :icon-cinebara-question:  Particles
 
-## :icon-cinebara-question:  Realtime GI
+## :icon-cinebara-develop:  Realtime GI
 
 ## :icon-cinebara-question:  Dolly / racks
 
@@ -64,7 +64,7 @@ Procedural effects on pre-recorded performances, such as smoothing out jitter, r
 
 ## :icon-cinebara-question:  Snapshots
 
-## :icon-cinebara-question:  Scripting
+## :icon-cinebara-develop:  Scripting
 
 ## :icon-cinebara-question:  Custom Shaders
 

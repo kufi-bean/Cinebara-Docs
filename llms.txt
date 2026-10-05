@@ -19,6 +19,7 @@
 
 - [Camera](https://docs.cinebara.com/nodes/camera.md): Defines a view into a stage. As it stands, a camera supports either Orthographic of Perspective projections but other projections will likely be added with time.
 - [Label](https://docs.cinebara.com/nodes/label.md): Provides a name for a specific branch of a tree. It is useful for organization. Lookup of nodes by label or name is not currently implemented.
+- [Networking](https://docs.cinebara.com/nodes/networking/networking.md): The structure of a networked stage hierarchy is implicitly replicated between peers. Properties on Nodes within the hierarchy are implcitly replicated during editing but explicitly replicated during play mode.
 - [Sky](https://docs.cinebara.com/nodes/sky.md): Provides an environment texture for the stage.
 - [Transform 3D (Node)](https://docs.cinebara.com/nodes/transform_3d.md): Provides a 3D transformation to all Nodes under it.
 - [Viewport (Node)](https://docs.cinebara.com/nodes/viewport.md): A list of render targets and cameras which should be used to render into those targets.
