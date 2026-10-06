@@ -7,6 +7,60 @@ set up for networking or be backed by networked.
 When replicating data, one user acts as an authority for the NetworkID. They do NOT own the data, they just help agree
 upon a unique ID.
 
+## Establishing a Connection
+
+Connecting to a Cinebara Session follows this general procedure:
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    participant Peers as Existing Users
+
+    Client->>Server: Request entry
+    Note over Server: Validate request
+
+    alt Accepted
+        Server-->>Client: Acceptance with assigned Id
+        Note over Client: Associate "local user" with the new Id
+        Server-->>Client: Existing Users information (including server)
+        Server->>Peers: New Peer information
+        Note over Peers: Associate the new peer with their Id
+    else Declined
+        Server-->>Client: Decline with reason
+    end
+```
+
+Validation covers a few checks that must pass before a user is accepted into the session. This checks app version / protocol compatibility, user allowance (per session visibility, whitelist / blacklist, client app validation), and available session slots.
+
+## Committing local diffs to a server
+
+Changes made within a session are recorded as DiffActions (Diffs for short). All Diffs are associated with a Stage being hosted by the Session.
+
+```mermaid
+sequenceDiagram
+    participant Client as Local Client
+    participant Server
+    participant Peers as Remote Peers
+
+    Note over Client: Apply Diffs locally
+    Note over Client: Collect Diffs
+    Client->>Server: Diff batch (Stage Id)
+    activate Server
+
+    loop Each Diff
+        alt Conflicts with a later change
+            Note over Server: Skip Diff
+        else No conflict
+            Note over Server: Apply Diff
+        end
+        Note over Server: Record Diff
+    end
+
+    Server->>Peers: All Diffs
+    deactivate Server
+```
+
 ## The master
 
 The master relays all reliable packets to all other users. They also decide on newly connecting users IDs.
@@ -16,6 +70,30 @@ The master relays all reliable packets to all other users. They also decide on n
 Anything that must be uniquely identified over the network uses a NetworkId, a polymorphic identifier type. An id may refer to a Node or a ValueInterface, both of which are owned by a stage in some way.
 
 A Network Id may then be used to find properties, since properties live directly on Nodes or ValueInterfaces. Identifying a property is done using the NetworkId of the thing holding the property followed by the property's string identifier.
+
+```mermaid
+sequenceDiagram
+    participant User as Local User
+    participant Server
+    participant Peers as Remote Peers
+
+    User->>Server: Local Id
+    alt Mapping already tracked
+        Note over Server: Reuse mapped global Id
+    else New local Id
+        Note over Server: Assign global Id
+        Note over Server: Retain local-to-global mapping
+        Server-->>User: Id mapping
+        Note over User: Adopt global Id
+    end
+    Server->>Peers: Global Id
+
+    User->>Server: Acknowledge global Id
+    Note over Server: Forget local-to-global mapping
+
+    User->>Server: Global Id
+    Server->>Peers: Global Id
+```
 
 NetworkIDs are the preferred way of referencing a Node, but it is not the only way. When a user first creates a Node,
 and it is replicated to the master, the node lacks an agreed upon NetworkID. For this reason it is given a temporary ID
