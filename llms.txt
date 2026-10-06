@@ -10,6 +10,7 @@
 - [Gizmos](https://docs.cinebara.com/gizmos.md): A gizmo is an interactable overlay used while editing a Stage. There are many types and they serve as a more convenient way to edit node properties.
 - [Input](https://docs.cinebara.com/input.md): Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like "move forward").
 - [Interface](https://docs.cinebara.com/interface.md): UI is not yet implemented
+- [Networking](https://docs.cinebara.com/networking/networking.md): The structure of a networked stage hierarchy is implicitly replicated between peers. Properties on Nodes within the hierarchy are implcitly replicated during editing but explicitly replicated during play mode.
 - [Security](https://docs.cinebara.com/security.md): Promises, contracts, and disclaimers that curious users may be interested to know about.
 - [Sessions](https://docs.cinebara.com/sessions.md): A container for a Stage to be performed on or edited by networked collaborators.
 - [Stages](https://docs.cinebara.com/stages.md): An environment to build or perform on.
