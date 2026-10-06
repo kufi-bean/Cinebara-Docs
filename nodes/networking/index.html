@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.844531496281">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.844601116371">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,11 +37,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=4.6.0.844531496281" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=4.6.0.844601116371" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=4.6.0.844531496281" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=4.6.0.844601116371" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=4.6.0.844531496281" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=4.6.0.844601116371" data-turbo-eval="false" defer></script>
+    <script id="mermaid-js" data-cfasync="false" src="../../resources/js/mermaid.js?v=4.6.0" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -139,11 +140,75 @@ hierarchy are implcitly replicated during editing but explicitly replicated duri
 set up for networking or be backed by networked.</p>
 <p>When replicating data, one user acts as an authority for the NetworkID. They do NOT own the data, they just help agree
 upon a unique ID.</p>
+<h2 id="establishing-a-connection">Establishing a Connection</h2>
+<p>Connecting to a Cinebara Session follows this general procedure:</p>
+<div class="overflow-hidden mb-6 py-4 dark:px-5 dark:bg-white rounded-md"><pre translate="no" class="mermaid w-full">sequenceDiagram
+    participant Client
+    participant Server
+    participant Peers as Existing Users
+
+    Client-&gt;&gt;Server: Request entry
+    Note over Server: Validate request
+
+    alt Accepted
+        Server--&gt;&gt;Client: Acceptance with assigned Id
+        Note over Client: Associate &quot;local user&quot; with the new Id
+        Server--&gt;&gt;Client: Existing Users information (including server)
+        Server-&gt;&gt;Peers: New Peer information
+        Note over Peers: Associate the new peer with their Id
+    else Declined
+        Server--&gt;&gt;Client: Decline with reason
+    end</pre></div>
+<p>Validation covers a few checks that must pass before a user is accepted into the session. This checks app version / protocol compatibility, user allowance (per session visibility, whitelist / blacklist, client app validation), and available session slots.</p>
+<h2 id="committing-local-diffs-to-a-server">Committing local diffs to a server</h2>
+<p>Changes made within a session are recorded as DiffActions (Diffs for short). All Diffs are associated with a Stage being hosted by the Session.</p>
+<div class="overflow-hidden mb-6 py-4 dark:px-5 dark:bg-white rounded-md"><pre translate="no" class="mermaid w-full">sequenceDiagram
+    participant Client as Local Client
+    participant Server
+    participant Peers as Remote Peers
+
+    Note over Client: Apply Diffs locally
+    Note over Client: Collect Diffs
+    Client-&gt;&gt;Server: Diff batch (Stage Id)
+    activate Server
+
+    loop Each Diff
+        alt Conflicts with a later change
+            Note over Server: Skip Diff
+        else No conflict
+            Note over Server: Apply Diff
+        end
+        Note over Server: Record Diff
+    end
+
+    Server-&gt;&gt;Peers: All Diffs
+    deactivate Server</pre></div>
 <h2 id="the-master">The master</h2>
 <p>The master relays all reliable packets to all other users. They also decide on newly connecting users IDs.</p>
 <h2 id="networkids">NetworkIDs</h2>
 <p>Anything that must be uniquely identified over the network uses a NetworkId, a polymorphic identifier type. An id may refer to a Node or a ValueInterface, both of which are owned by a stage in some way.</p>
 <p>A Network Id may then be used to find properties, since properties live directly on Nodes or ValueInterfaces. Identifying a property is done using the NetworkId of the thing holding the property followed by the property&#x27;s string identifier.</p>
+<div class="overflow-hidden mb-6 py-4 dark:px-5 dark:bg-white rounded-md"><pre translate="no" class="mermaid w-full">sequenceDiagram
+    participant User as Local User
+    participant Server
+    participant Peers as Remote Peers
+
+    User-&gt;&gt;Server: Local Id
+    alt Mapping already tracked
+        Note over Server: Reuse mapped global Id
+    else New local Id
+        Note over Server: Assign global Id
+        Note over Server: Retain local-to-global mapping
+        Server--&gt;&gt;User: Id mapping
+        Note over User: Adopt global Id
+    end
+    Server-&gt;&gt;Peers: Global Id
+
+    User-&gt;&gt;Server: Acknowledge global Id
+    Note over Server: Forget local-to-global mapping
+
+    User-&gt;&gt;Server: Global Id
+    Server-&gt;&gt;Peers: Global Id</pre></div>
 <p>NetworkIDs are the preferred way of referencing a Node, but it is not the only way. When a user first creates a Node,
 and it is replicated to the master, the node lacks an agreed upon NetworkID. For this reason it is given a temporary ID
 that is composed of the User&#x27;s ID and a NetworkID as decided by the author of the Node. This is more data but avoids
@@ -231,6 +296,6 @@ who had lost the conflict battle.</p>
 
     <div id="retype-overlay-target"></div>
 
-        <script data-cfasync="false">window.__DOCS__ = { "title": "Networking", level: 2, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/nodes/networking/networking.md" }</script>
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Networking", level: 2, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: true, hasMath: false, tocDepth: 23, "md": "/nodes/networking/networking.md" }</script>
 </body>
 </html>
