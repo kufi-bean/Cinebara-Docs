@@ -5,6 +5,8 @@
 - [Nodes](https://docs.cinebara.com/nodes/nodes.md): The building block of a Stage, Nodes provide structure and behaviour and are oganized in a tree.
 - [Welcome](https://docs.cinebara.com/readme.md): Welcome
 - [Rendering](https://docs.cinebara.com/rendering/rendering.md): Describes the general process for rendering the Cinebara window.
+- [Amazing ideas we had while working on the app](https://docs.cinebara.com/good_ideas.md): Deleting a polymorphic property storage should warn you that other properties are using the storage properties as overrides and provide a mechanism to replace those overrides with a schema that matches the properties used for override.
+- [Assets](https://docs.cinebara.com/assets/assets.md): An asset is anything that can be tracked by an asset server and served to Cinebara. These are commonly referenced by nodes and serve a high range of roles.
 - [Entities](https://docs.cinebara.com/entities.md): The entity system described on this page is planned and not implemented. There are currently no Entity or EntityInstance types.
 - [Features](https://docs.cinebara.com/features.md): A list of features that are either planned or implemented.
 - [Gizmos](https://docs.cinebara.com/gizmos.md): A gizmo is an interactable overlay used while editing a Stage. There are many types and they serve as a more convenient way to edit node properties.

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.846081412471">
+
+    <!-- See retype.com -->
+    <meta name="generator" content="Retype 4.6.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Assets</title>
+    <meta name="title" content="Assets">
+    <meta name="description" content="An asset is anything that can be tracked by an asset server and served to Cinebara. These are commonly referenced by nodes and serve a high range of roles.">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://docs.cinebara.com/assets/">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://docs.cinebara.com/sitemap.xml">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://docs.cinebara.com/assets/">
+    <meta property="og:title" content="Assets">
+    <meta property="og:description" content="An asset is anything that can be tracked by an asset server and served to Cinebara. These are commonly referenced by nodes and serve a high range of roles.">
+    <meta property="og:site_name" content="Cinebara">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://docs.cinebara.com/assets/">
+    <meta name="twitter:title" content="Assets">
+    <meta name="twitter:description" content="An asset is anything that can be tracked by an asset server and served to Cinebara. These are commonly referenced by nodes and serve a high range of roles.">
+
+    <!-- Alternate Markdown -->
+    <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/assets/assets.md">
+
+    <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
+
+    <link href="../resources/css/retype.css?v=4.6.0.846081412471" rel="stylesheet">
+
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.846081412471" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.846081412471" data-turbo-eval="false" defer></script>
+</head>
+<body>
+    <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
+    <div class="absolute bottom-0 left-0" style="top: 5rem; right: 50%"></div>
+
+    <header id="retype-header" class="sticky top-0 z-30 flex w-full h-16 bg-header-bg border-b border-header-border md:h-20">
+        <div class="container relative flex items-center justify-between pr-6 grow md:justify-start">
+            <!-- Mobile menu button skeleton -->
+            <button v-cloak class="skeleton retype-mobile-menu-button flex items-center justify-center shrink-0 overflow-hidden dark:text-white focus:outline-hidden rounded-full w-10 h-10 ml-3.5 md:hidden"><svg xmlns="http://www.w3.org/2000/svg" class="mb-px shrink-0" width="24" height="24" viewBox="0 0 24 24" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor"><path d="M2 4h20v2H2zM2 11h20v2H2zM2 18h20v2H2z"></path></g></svg></button>
+            <div v-cloak id="retype-sidebar-left-toggle-button"></div>
+    
+            <!-- Logo -->
+            <div class="flex items-center justify-between h-full py-2 md:w-75">
+                <div class="flex items-center px-2 md:px-6">
+                    <a id="retype-branding-logo" href="https://docs.cinebara.com/" class="flex items-center leading-snug text-2xl">
+                        <span class="dark:text-white font-bold line-clamp-1 md:line-clamp-2">Cinebara</span>
+                    </a><span id="retype-branding-label" class="inline-flex mt-1 px-2 py-1 ml-4 text-xs font-medium leading-none items-center rounded-md bg-branding-label-bg text-branding-label-text ring-1 ring-branding-label-border ring-inset md:inline-block">Docs</span>
+                </div>
+    
+                <span class="hidden h-8 border-r md:inline-block border-base-border"></span>
+            </div>
+    
+            <div class="flex justify-between md:grow">
+                <!-- Top Nav -->
+                <nav id="retype-header-nav" class="hidden md:flex">
+                    <ul class="flex flex-col mb-4 md:pl-16 md:mb-0 md:flex-row md:items-center">
+                        
+                    </ul>
+                </nav>
+    
+                <div v-cloak class="flex justify-end grow">
+                    <div id="retype-mobile-search-button"></div>
+                    <doc-search-desktop></doc-search-desktop>
+    
+                    <doc-theme-switch class="lg:ml-2"></doc-theme-switch>
+                    <doc-history></doc-history>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div id="retype-container" class="container relative flex bg-white">
+        <!-- Sidebar Skeleton -->
+        <div v-cloak class="fixed flex flex-col shrink-0 duration-300 ease-in-out bg-sidebar-left-bg border-sidebar-left-border sidebar top-20 w-75 border-r h-screen md:sticky transition-transform skeleton">
+        
+            <div class="flex items-center h-16 px-6">
+                <input id="retype-filter-input-mock" class="w-full h-10 pl-8 px-3 py-2 transition-colors duration-200 ease-linear bg-filter-bg border border-filter-border rounded-lg shadow-none md:text-sm hover:border-filter-border-hover focus:outline-hidden focus:border-filter-border-focus placeholder-filter-placeholder" type="text">
+            </div>
+        
+            <div class="pl-6 mt-1 mb-4">
+                <div class="w-32 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-48 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-40 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-32 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-48 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-40 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+            </div>
+        
+            <div class="shrink-0 mt-auto bg-transparent dark:border-base-border">
+                <a class="flex items-center justify-center flex-nowrap h-16 text-gray-350 dark:text-dark-400 hover:text-gray-600 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                    <span class="text-xs whitespace-nowrap">Powered by</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Sidebar component -->
+        <doc-sidebar v-cloak>
+            <template #sidebar-footer>
+                <div class="shrink-0 mt-auto border-t md:bg-transparent md:border-none dark:border-base-border">
+        
+                    <a class="flex items-center justify-center flex-nowrap h-16 text-gray-350 dark:text-dark-400 hover:text-gray-600 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                        <span class="text-xs whitespace-nowrap">Powered by</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                    </a>
+                </div>
+            </template>
+        </doc-sidebar>
+
+        <div class="grow min-w-0 bg-body-bg">
+            <!-- Render "toolbar" template here on api pages --><!-- Render page content -->
+<div class="flex">
+    <div id="retype-main" class="min-w-0 p-4 grow md:px-16">
+        <main class="relative pb-12 lg:pt-2">
+            <div class="relative retype-markdown" id="retype-content">
+                <!-- Rendered if sidebar right is enabled -->
+                <div id="retype-sidebar-right-toggle"></div>
+                <doc-page-actions></doc-page-actions>
+
+                <!-- Page content  -->
+<h1 id="assets">Assets</h1>
+<p>An asset is anything that can be tracked by an asset server and served to Cinebara. These are commonly referenced by nodes and serve a high range of roles.</p>
+<h2 id="asset-server">Asset Server</h2>
+<p>The asset server is responsible for serving assets (no way!).
+Assets are associate to both a path and an Id. References to assets should be held by Id, but an asset may also be queried by path.
+Assets are stored in a single flat folder and its name is its ID within the database. Metadata for the asset is stored in JSON as another column in the DB.
+If the same asset is stored twice, it is not saved as a separate file, rather, the asset points back to the already existing resource.</p>
+<p>Loading an asset into a session does not mean it sits on an asset server. Rather, it is in session storage until something is explicitely saved that uses the asset. This can be thought of as an overlay of the asset server, you resolve what is in the session assets before the actual asset server.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-question"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-question" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11ZM22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11Z"></path>
+                    <path d="M8.89368 5.54722C9.70794 5.06874 10.665 4.8935 11.5958 5.05308C12.5267 5.21276 13.3713 5.6968 13.9796 6.41929C14.5877 7.14169 14.9212 8.0561 14.92 9.00035L14.9074 9.28062C14.7798 10.6552 13.7345 11.5758 12.9747 12.0824C12.5393 12.3727 12.1107 12.5857 11.795 12.7259C11.6358 12.7967 11.5011 12.8503 11.4044 12.8871C11.3561 12.9055 11.3167 12.9199 11.2882 12.93C11.2741 12.9351 11.2628 12.9397 11.254 12.9427C11.2498 12.9442 11.2462 12.9457 11.2433 12.9466C11.242 12.9471 11.2404 12.9473 11.2394 12.9476L11.2374 12.9486H11.2365L11.1378 12.9759C10.6432 13.087 10.1346 12.8071 9.97083 12.3158C9.79672 11.7926 10.0791 11.2264 10.6017 11.0511V11.0521L10.6036 11.0511C10.6063 11.0502 10.6113 11.0487 10.6183 11.0462C10.6336 11.0408 10.6591 11.0316 10.6925 11.0189C10.7599 10.9932 10.8606 10.953 10.9825 10.8988C11.2293 10.7891 11.551 10.6279 11.8654 10.4183C12.5548 9.95872 12.9198 9.46936 12.92 9.00035V8.9984L12.9122 8.82261C12.8768 8.41362 12.7165 8.02363 12.4503 7.70738C12.1461 7.34604 11.7235 7.10364 11.2579 7.02379C10.7925 6.944 10.3135 7.03158 9.90638 7.27086C9.49929 7.51011 9.1901 7.88601 9.03333 8.3314L8.99427 8.42613C8.7787 8.88497 8.24645 9.11555 7.75794 8.94371C7.23704 8.76045 6.96349 8.18924 7.14661 7.66832L7.20911 7.5023C7.53839 6.68391 8.1303 5.99587 8.89368 5.54722Z"></path>
+                    <path d="M11.0098 15L11.1123 15.0049C11.6165 15.0561 12.0098 15.4822 12.0098 16C12.0098 16.5178 11.6165 16.9439 11.1123 16.9951L11.0098 17H11C10.4477 17 10 16.5523 10 16C10 15.4477 10.4477 15 11 15H11.0098Z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>What happens if the session closes unexpectedly?</h5>
+<p>Should sessions auto-save periodically, causing edited assets to gain new versions?
+Or should edited assets keep a locally saved version on disk which would survive shutdown?</p>
+        </div>
+    </div>
+</div>
+<h2 id="asset-repositories">Asset Repositories</h2>
+<p>When you open the asset drawer you are presented with your local repository. The local repository stores your personal assets and does not belong to any server. Only the local user can access this repository.</p>
+<p>Repositories are distinct scopes for assets to live in. Assets may have contents which refer to other assets within the same repository. Assets may not reference assets outside of their repository.</p>
+<h2 id="referencing-assets-from-another-repo">Referencing assets from another repo</h2>
+<p>To use assets that belong to another repository, a linked asset is used. A linked asset is a local copy of an asset from another repo with a bit of metadata about where it was originally loaded from. Linked assets cannot be modified. However, you may unlink the asset to make it an owned copy which is free for mutation. Unlinking will preserve links for referenced assets contained within the unlinked asset, so a recursive unlink is also provided to make a completely local copy.</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>A repository may depend on other repositories, quite like github submodules. The entire referenced repository should probably be copied to ensure that each repo can stand on its own, but that may be optional.</p>
+<h2 id="version-control">Version control</h2>
+<p>Creating a commit in a repository takes a snapshot of the state of the repo, or at least the changes since the last snapshot. These commits are uniquely identifyable and a commit must be referenced by repos that intend to use dependencies.</p>
+<p>Some assets may support even more granular version control. A Stage, for example, records every change that is made to it and each time it is saved, a new artifact is made for the stage asset that preserves these &quot;diffs&quot;.</p>
+<p>Modifying and saving an asset creates another artifact for it. This could be problematic for large assets being modified, so we may want to consider &quot;live artifacts&quot; allowing for drop-in replacements of artifacts and reducing duplication. To be discussed.</p>
+<doc-panel id="open-questions">
+    <template #title>Open Questions</template>
+<ul>
+<li>Can you commit versions of assets without committing the entire project?</li>
+<li>When modifying an asset and saving, does it automatically save a new artifact or replace the existing one?</li>
+<li>Are repos replicated locally when hosting one from a server?</li>
+<li>How does hosting a repo on a server work in comparison to hosting one locally for a session?</li>
+<li>Can multiple sessions be open for the same repo at once?</li>
+<li>How do linked assets work? Do you link entire projects as &quot;sub-projects&quot;?</li>
+<li>Do we have dependencies? A project could depend on another project from another repo / asset server. This could be how asset linking works.</li>
+<li>Does saving an asset always make a new artifact or does that require an explicit commit?</li>
+<li>How do permissions / ownership work?</li>
+<li>Who can use your repo as a dependency? Is it a public / private system or more flexible?</li>
+</ul>
+</doc-panel>
+<h2 id="implementation-steps">Implementation steps</h2>
+<ul class="contains-task-list">
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Creating a repo</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Opening an existing repo</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Hosting a repo in a session</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Hosting a repo persistently</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Using a persistent repo in a session</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Making commits in a repo</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Restoring to previous commits</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Repo branches</li>
+</ul>
+
+                
+                <!-- Required only on API pages -->
+                <doc-toolbar-member-filter-no-results></doc-toolbar-member-filter-no-results>
+            </div>
+            <footer id="retype-content-footer" class="clear-both">
+            
+                <nav id="retype-nextprev" class="print:hidden flex mt-14">
+                    <div class="w-1/2">
+                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../good_ideas/">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                            <span>
+                                <span class="block text-xs font-normal text-base-text-muted">Previous</span>
+                                <span class="block mt-1">Amazing ideas we had while working on the app</span>
+                            </span>
+                        </a>
+                    </div>
+            
+                    <div class="w-1/2">
+                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../entities/">
+                            <span>
+                                <span class="block text-xs font-normal text-right text-base-text-muted">Next</span>
+                                <span class="block mt-1">Entities</span>
+                            </span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                        </a>
+                    </div>
+                </nav>
+            </footer>
+        </main>
+
+        <div id="retype-page-footer" class="print:border-none border-t border-base-border pt-6 mb-8">
+            <footer class="flex flex-wrap items-center justify-between print:justify-center">
+                <div id="retype-footer-links" class="print:hidden">
+                    <ul class="flex flex-wrap items-center text-sm">
+                    </ul>
+                </div>
+                <div id="retype-copyright" class="print:justify-center py-2 text-footer-text font-footer-link text-sm leading-relaxed"></div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Rendered if sidebar right is enabled -->
+    <!-- Sidebar right skeleton-->
+    <div v-cloak class="fixed top-0 bottom-0 right-0 translate-x-full bg-sidebar-right-bg border-sidebar-right-border lg:sticky lg:border-l lg:shrink-0 lg:pt-6 lg:translate-x-0 sm:w-1/2 lg:w-64 lg:z-0 md:w-104 sidebar-right skeleton">
+        <div class="pl-5">
+            <div class="w-32 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+            <div class="w-48 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+            <div class="w-40 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+        </div>
+    </div>
+
+    <!-- User should be able to hide sidebar right -->
+    <doc-sidebar-right v-cloak></doc-sidebar-right>
+</div>
+
+        </div>
+    </div>
+
+    <doc-search-mobile></doc-search-mobile>
+    <doc-back-to-top></doc-back-to-top>
+</div>
+
+
+    <div id="retype-overlay-target"></div>
+
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Assets", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/assets/assets.md" }</script>
+</body>
+</html>
