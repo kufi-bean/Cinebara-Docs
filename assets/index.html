@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.846261643132">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.846261958667">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,11 +37,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.846261643132" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.846261958667" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.846261643132" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.846261958667" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.846261643132" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.846261958667" data-turbo-eval="false" defer></script>
     <script id="mermaid-js" data-cfasync="false" src="../resources/js/mermaid.js?v=4.6.0" defer></script>
 </head>
 <body>
@@ -288,49 +288,45 @@ If an asset is not found in the working state then the request is passed through
 Additionally, all of a repositories historical versions of the repository are available for immediate querying. This means that asset references can choose to refer to an older version of a given asset from within the same repository.</p>
 </doc-panel>
 <h2 id="open-questions">Open Questions</h2>
-<ul>
-<li>
-<p>Can you commit versions of assets without committing the entire repo?
-A: Assets may have specific commit-like handling, but it is not equivalent to a repo commit.</p>
-</li>
-<li>
-<p>When modifying an asset and saving, does it automatically save a new artifact or replace the existing one?
-A: It removes the old one and adds the new one with the same id.</p>
-</li>
-<li>
-<p>Are repos replicated locally when hosting one from a server?
-A: You don&#x27;t replicate it. Repo diffs will accumulate and be applied on commit.</p>
-</li>
-<li>
-<p>How does hosting a repo on a server work in comparison to hosting one locally for a session?
-A: Diffs remove the need to answer this.</p>
-</li>
-<li>
-<p>Can multiple sessions be open for the same repo at once?
-A: Yes, because of the diffs there isn&#x27;t direct mutation competition.</p>
-</li>
-<li>
-<p>How do linked assets work? Do you link entire projects as &quot;sub-projects&quot;?</p>
-</li>
-<li>
-<p>Do we have dependencies? A project could depend on another project from another repo / asset server. This could be how asset linking works.
-A: Nested repositories will act like dependencies with a location like any asset. It is effectively an asset.</p>
-</li>
-<li>
-<p>How do permissions / ownership work?
-A: Access to a repo requires a key. The key can be shared to clients even if they are not logged in. Later, accounts can provide the keys automatically.</p>
-</li>
-<li>
-<p>Who can use your repo as a nested repo? Is it a public / private system or more flexible?
-A: Sub-repos are shared to specific users or made completely public. A public repo with a private nested repo exposes the nested repo. How to properly handle this is under discussion.</p>
-</li>
-<li>
-<p>How do we represent assets which are not saved in a repo but still used in a stage? For example, a generated asset, like a node which outputs a procedural mesh. Or just an asset which is used in a property but is not saved to the repo separately.
-A: Assets stored in properties become sub-assets of the thing the properties are on
-A: Assets provided through pushers are not saved, so all is good.
-==-</p>
-</li>
-</ul>
+<blockquote>
+<p><strong>Q</strong>: Can you commit versions of assets without committing the entire repo?</p>
+<p><strong>A</strong>: Assets may have specific commit-like handling, but it is not equivalent to a repo commit.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: When modifying an asset and saving, does it automatically save a new artifact or replace the existing one?</p>
+<p><strong>A</strong>: It removes the old one and adds the new one with the same id.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: Are repos replicated locally when hosting one from a server?</p>
+<p><strong>A</strong>: You don&#x27;t replicate it. Repo diffs will accumulate and be applied on commit.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: How does hosting a repo on a server work in comparison to hosting one locally for a session?</p>
+<p><strong>A</strong>: Diffs remove the need to answer this.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: Can multiple sessions be open for the same repo at once?</p>
+<p><strong>A</strong>: Yes, because of the diffs there isn&#x27;t direct mutation competition.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: How do linked assets work? Do you link entire projects as &quot;sub-projects&quot;?</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: Do we have dependencies? A project could depend on another project from another repo / asset server. This could be how asset linking works.</p>
+<p><strong>A</strong>: Nested repositories will act like dependencies with a location like any asset. It is effectively an asset.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: How do permissions / ownership work?</p>
+<p><strong>A</strong>: Access to a repo requires a key. The key can be shared to clients even if they are not logged in. Later, accounts can provide the keys automatically.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: Who can use your repo as a nested repo? Is it a public / private system or more flexible?</p>
+<p><strong>A</strong>: Sub-repos are shared to specific users or made completely public. A public repo with a private nested repo exposes the nested repo. How to properly handle this is under discussion.</p>
+</blockquote>
+<blockquote>
+<p><strong>Q</strong>: How do we represent assets which are not saved in a repo but still used in a stage? For example, a generated asset, like a node which outputs a procedural mesh. Or just an asset which is used in a property but is not saved to the repo separately.</p>
+<p><strong>A</strong>: Assets stored in properties become sub-assets of the thing the properties are on. Assets provided through pushers are not saved, so all is good.</p>
+</blockquote>
 
                 
                 <!-- Required only on API pages -->
