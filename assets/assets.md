@@ -139,32 +139,40 @@ Additionally, all of a repositories historical versions of the repository are av
 
 ## Open Questions
 
-- Can you commit versions of assets without committing the entire repo?
-  A: Assets may have specific commit-like handling, but it is not equivalent to a repo commit.
+> **Q**: Can you commit versions of assets without committing the entire repo?
+>
+> **A**: Assets may have specific commit-like handling, but it is not equivalent to a repo commit.
 
-- When modifying an asset and saving, does it automatically save a new artifact or replace the existing one?
-  A: It removes the old one and adds the new one with the same id.
+> **Q**: When modifying an asset and saving, does it automatically save a new artifact or replace the existing one?
+>
+> **A**: It removes the old one and adds the new one with the same id.
 
-- Are repos replicated locally when hosting one from a server?
-  A: You don't replicate it. Repo diffs will accumulate and be applied on commit.
+> **Q**: Are repos replicated locally when hosting one from a server?
+>
+> **A**: You don't replicate it. Repo diffs will accumulate and be applied on commit.
 
-- How does hosting a repo on a server work in comparison to hosting one locally for a session?
-  A: Diffs remove the need to answer this.
+> **Q**: How does hosting a repo on a server work in comparison to hosting one locally for a session?
+>
+> **A**: Diffs remove the need to answer this.
 
-- Can multiple sessions be open for the same repo at once?
-  A: Yes, because of the diffs there isn't direct mutation competition.
+> **Q**: Can multiple sessions be open for the same repo at once?
+>
+> **A**: Yes, because of the diffs there isn't direct mutation competition.
 
-- How do linked assets work? Do you link entire projects as "sub-projects"?
-- Do we have dependencies? A project could depend on another project from another repo / asset server. This could be how asset linking works.
-  A: Nested repositories will act like dependencies with a location like any asset. It is effectively an asset.
+> **Q**: How do linked assets work? Do you link entire projects as "sub-projects"?
 
-- How do permissions / ownership work?
-  A: Access to a repo requires a key. The key can be shared to clients even if they are not logged in. Later, accounts can provide the keys automatically.
+> **Q**: Do we have dependencies? A project could depend on another project from another repo / asset server. This could be how asset linking works.
+>
+> **A**: Nested repositories will act like dependencies with a location like any asset. It is effectively an asset.
 
-- Who can use your repo as a nested repo? Is it a public / private system or more flexible?
-  A: Sub-repos are shared to specific users or made completely public. A public repo with a private nested repo exposes the nested repo. How to properly handle this is under discussion.
+> **Q**: How do permissions / ownership work?
+>
+> **A**: Access to a repo requires a key. The key can be shared to clients even if they are not logged in. Later, accounts can provide the keys automatically.
 
-- How do we represent assets which are not saved in a repo but still used in a stage? For example, a generated asset, like a node which outputs a procedural mesh. Or just an asset which is used in a property but is not saved to the repo separately.
-  A: Assets stored in properties become sub-assets of the thing the properties are on
-  A: Assets provided through pushers are not saved, so all is good.
-  ==-
+> **Q**: Who can use your repo as a nested repo? Is it a public / private system or more flexible?
+>
+> **A**: Sub-repos are shared to specific users or made completely public. A public repo with a private nested repo exposes the nested repo. How to properly handle this is under discussion.
+
+> **Q**: How do we represent assets which are not saved in a repo but still used in a stage? For example, a generated asset, like a node which outputs a procedural mesh. Or just an asset which is used in a property but is not saved to the repo separately.
+>
+> **A**: Assets stored in properties become sub-assets of the thing the properties are on. Assets provided through pushers are not saved, so all is good.
