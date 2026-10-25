@@ -120,6 +120,17 @@ flowchart TD
 
 Notice that we did not remove Asset A. This is what makes this a VCS, you never discard older commit structures and so you may always checkout a prior commit.
 
+#### Finding an asset from root to leaf
+
+Each child of an internal chunk stores is maximum represented asset UUID. Children are ordered by this maximum. Traversal follows the first child whose maximum id is at least the UUID we're trying to find.
+This repeats until we find a leaf. The leaf contains multiple represented asset rows, so one last lookup is done to find the row with the UUID we're searching for. 
+
+==- How UUIDs are compared
+
+UUIDs are compared by converting them to strings and then comparing each character from left to right. 
+
+===
+
 ### Working state
 
 Working in a session does not modify a repository directly, rather, changes to the repository are accumulated in a "working state". This working state is what the session actually serves to clients looking for assets.

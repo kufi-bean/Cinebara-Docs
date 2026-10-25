@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.846262046762">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.846263095408">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,11 +37,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.846262046762" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.846263095408" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.846262046762" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.846263095408" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.846262046762" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.846263095408" data-turbo-eval="false" defer></script>
     <script id="mermaid-js" data-cfasync="false" src="../resources/js/mermaid.js?v=4.6.0" defer></script>
 </head>
 <body>
@@ -276,6 +276,13 @@ How exactly the traversal works will come later.</p>
 <p>The amount of deduplicated structure scales linearly with the size of the repository.</p>
 </blockquote>
 <p>Notice that we did not remove Asset A. This is what makes this a VCS, you never discard older commit structures and so you may always checkout a prior commit.</p>
+<h4 id="finding-an-asset-from-root-to-leaf">Finding an asset from root to leaf</h4>
+<p>Each child of an internal chunk stores is maximum represented asset UUID. Children are ordered by this maximum. Traversal follows the first child whose maximum id is at least the UUID we&#x27;re trying to find.
+This repeats until we find a leaf. The leaf contains multiple represented asset rows, so one last lookup is done to find the row with the UUID we&#x27;re searching for.</p>
+<doc-panel id="how-uuids-are-compared" collapsed>
+    <template #title>How UUIDs are compared</template>
+<p>UUIDs are compared by converting them to strings and then comparing each character from left to right.</p>
+</doc-panel>
 <h3 id="working-state">Working state</h3>
 <p>Working in a session does not modify a repository directly, rather, changes to the repository are accumulated in a &quot;working state&quot;. This working state is what the session actually serves to clients looking for assets.
 Suppose Treb is in a session and he adds a new texture &quot;Cobblestone&quot;. The texture is not yet added to the repository, but it is remembered in the working state. Peers requesting &quot;Cobblestone&quot; now go through the working state first and find Trebs texture.
