@@ -79,7 +79,54 @@ The database holds tables for the specific purpose of version control. This incl
 - Commits
 - Chunks
 
-Rows of each element are identified by an auto-incrementing long.
+There are also some relational tables which I'm not showing in this list, but they are typical db many-to-one relational nonsense.
+
+### Chunks
+
+Chunks are used as the structure of the VCS. There are two types of chunk: internal and leaf. These types are not explicit, but rather inferred from the available data. If a chunk has child chunks then it is internal, and if the chunk has "rows" then it is a leaf.
+The purpose of this architecture is to allow for reusing entire sub-trees when representing the structure of a commit.
+
+To illustrate how internal chunks are reused, consider this tree:
+```mermaid
+flowchart TD
+    C1((Commit 1)) --> R1[Root chunk 1 - Internal]
+    R1 --> A1[A - Internal]
+    R1 --> B1[B - Internal]
+    A1 --> X1[Asset A]
+    B1 --> Y1[Asset B]
+```
+
+Notice that "Commit 1" holds a reference to "Root chunk 1 - Internal". If a query is ever made that refers to "Commit 1", then we now know which chunk to begin traversal from to find the asset requested.
+How exactly the traversal works will come later.
+
+Now suppose that another commit is made which modified Asset A but not Asset B. We need to rebuild the ancestor chunks of Asset A so that we can point to the updated asset, but the unchanged B subtree may be reused.
+
+```mermaid
+flowchart TD
+    C1((Commit 1)) --> R1[Root chunk 1 - Internal]
+    C2((Commit 2)) --> R2[Root chunk 2 - Internal]
+
+    R1 --> A1[A - Internal]
+    R1 --> B1[B - Internal]
+    R2 --> A2[A - Internal]
+    R2 --> B1
+
+    A1 --> X1[Asset A]
+    A2 --> X2[Asset A - Modified]
+    B1 --> Y1[Asset B]
+```
+
+> The amount of deduplicated structure scales linearly with the size of the repository. 
+
+Notice that we did not remove Asset A. This is what makes this a VCS, you never discard older commit structures and so you may always checkout a prior commit.
+
+### Working state
+
+Working in a session does not modify a repository directly, rather, changes to the repository are accumulated in a "working state". This working state is what the session actually serves to clients looking for assets.
+Suppose Treb is in a session and he adds a new texture "Cobblestone". The texture is not yet added to the repository, but it is remembered in the working state. Peers requesting "Cobblestone" now go through the working state first and find Trebs texture.
+If an asset is not found in the working state then the request is passed through to the repository.
+
+Once Treb is satisfied with the working state he can send his changes to the asset server which will create a new commit. Cobblestone is now actually represented in his repository.
 
 ## FAQ
 
