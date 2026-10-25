@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.846259921551">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.846261643132">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,11 +37,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.846259921551" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.846261643132" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.846259921551" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.846261643132" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.846259921551" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.846261643132" data-turbo-eval="false" defer></script>
+    <script id="mermaid-js" data-cfasync="false" src="../resources/js/mermaid.js?v=4.6.0" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -245,7 +246,41 @@
 <li>Commits</li>
 <li>Chunks</li>
 </ul>
-<p>Rows of each element are identified by an auto-incrementing long.</p>
+<p>There are also some relational tables which I&#x27;m not showing in this list, but they are typical db many-to-one relational nonsense.</p>
+<h3 id="chunks">Chunks</h3>
+<p>Chunks are used as the structure of the VCS. There are two types of chunk: internal and leaf. These types are not explicit, but rather inferred from the available data. If a chunk has child chunks then it is internal, and if the chunk has &quot;rows&quot; then it is a leaf.
+The purpose of this architecture is to allow for reusing entire sub-trees when representing the structure of a commit.</p>
+<p>To illustrate how internal chunks are reused, consider this tree:</p>
+<div class="overflow-hidden mb-6 py-4 dark:px-5 dark:bg-white rounded-md"><pre translate="no" class="mermaid w-full">flowchart TD
+    C1((Commit 1)) --&gt; R1[Root chunk 1 - Internal]
+    R1 --&gt; A1[A - Internal]
+    R1 --&gt; B1[B - Internal]
+    A1 --&gt; X1[Asset A]
+    B1 --&gt; Y1[Asset B]</pre></div>
+<p>Notice that &quot;Commit 1&quot; holds a reference to &quot;Root chunk 1 - Internal&quot;. If a query is ever made that refers to &quot;Commit 1&quot;, then we now know which chunk to begin traversal from to find the asset requested.
+How exactly the traversal works will come later.</p>
+<p>Now suppose that another commit is made which modified Asset A but not Asset B. We need to rebuild the ancestor chunks of Asset A so that we can point to the updated asset, but the unchanged B subtree may be reused.</p>
+<div class="overflow-hidden mb-6 py-4 dark:px-5 dark:bg-white rounded-md"><pre translate="no" class="mermaid w-full">flowchart TD
+    C1((Commit 1)) --&gt; R1[Root chunk 1 - Internal]
+    C2((Commit 2)) --&gt; R2[Root chunk 2 - Internal]
+
+    R1 --&gt; A1[A - Internal]
+    R1 --&gt; B1[B - Internal]
+    R2 --&gt; A2[A - Internal]
+    R2 --&gt; B1
+
+    A1 --&gt; X1[Asset A]
+    A2 --&gt; X2[Asset A - Modified]
+    B1 --&gt; Y1[Asset B]</pre></div>
+<blockquote>
+<p>The amount of deduplicated structure scales linearly with the size of the repository.</p>
+</blockquote>
+<p>Notice that we did not remove Asset A. This is what makes this a VCS, you never discard older commit structures and so you may always checkout a prior commit.</p>
+<h3 id="working-state">Working state</h3>
+<p>Working in a session does not modify a repository directly, rather, changes to the repository are accumulated in a &quot;working state&quot;. This working state is what the session actually serves to clients looking for assets.
+Suppose Treb is in a session and he adds a new texture &quot;Cobblestone&quot;. The texture is not yet added to the repository, but it is remembered in the working state. Peers requesting &quot;Cobblestone&quot; now go through the working state first and find Trebs texture.
+If an asset is not found in the working state then the request is passed through to the repository.</p>
+<p>Once Treb is satisfied with the working state he can send his changes to the asset server which will create a new commit. Cobblestone is now actually represented in his repository.</p>
 <h2 id="faq">FAQ</h2>
 <doc-panel id="why-not-store-files-in-folders-and-use-git">
     <template #title>Why not store files in folders and use git?</template>
@@ -362,6 +397,6 @@ A: Assets provided through pushers are not saved, so all is good.
 
     <div id="retype-overlay-target"></div>
 
-        <script data-cfasync="false">window.__DOCS__ = { "title": "Assets", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/assets/assets.md" }</script>
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Assets", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: true, hasMath: false, tocDepth: 23, "md": "/assets/assets.md" }</script>
 </body>
 </html>
